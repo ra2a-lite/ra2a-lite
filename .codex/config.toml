@@ -1,0 +1,21 @@
+# RA2A-Lite：Codex 项目层配置。修改属于控制文件变更，须研究员批准（AGENTS.md 规则 3）。
+
+model = "gpt-5.6"                    # 主会话（Lead）；换成你可用的完整 ID
+model_reasoning_effort = "high"
+approval_policy = "on-request"       # 写 .git、联网、写仓库外时请求批准
+sandbox_mode = "workspace-write"     # 仓库可写；.git 与 .codex 受沙箱保护
+web_search = "cached"
+
+[sandbox_workspace_write]
+network_access = false
+
+[shell_environment_policy]
+set = { CUDA_VISIBLE_DEVICES = "" }  # 智能体执行的所有命令都看不到 GPU
+
+[features]
+memories = false                     # 关闭跨会话记忆（键名以所用版本为准，由 canary K5 核验）
+hooks = true                         # hooks 已经稳定的版本可以删掉这一行
+
+[agents]
+max_threads = 4                      # P1/P3/P4/P8 三路并行，P5 三名评委
+max_depth = 1                        # 子代理不能再派生

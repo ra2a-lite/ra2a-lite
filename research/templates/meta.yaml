@@ -1,0 +1,12 @@
+round: R00
+parent_round: null
+parent_lock_commit: null
+started_at: ""
+protocol_mode: full
+charter_blob: ""            # git hash-object research/charter.md
+rubric_version: ""
+runtime: {name: "", version: ""}   # claude_code | codex；版本取自 claude --version / codex --version
+models: {lead: "", ra-analyst: "", ra-designer: "", ra-skeptic: "", ra-judge: "", ra-verifier: ""}
+platform_changed: false
+last_phase: "0"
+dev_looks_this_round: 0

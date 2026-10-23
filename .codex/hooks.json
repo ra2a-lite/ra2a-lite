@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "SessionStart": [
+      { "hooks": [ { "type": "command", "timeout": 30,
+        "command": "python3 \"$(git rev-parse --show-toplevel)/research/hooks/ra_log.py\" session" } ] }
+    ],
+    "UserPromptSubmit": [
+      { "hooks": [ { "type": "command", "timeout": 30,
+        "command": "python3 \"$(git rev-parse --show-toplevel)/research/hooks/ra_log.py\" human" } ] }
+    ],
+    "SubagentStop": [
+      { "hooks": [ { "type": "command", "timeout": 30,
+        "command": "python3 \"$(git rev-parse --show-toplevel)/research/hooks/ra_log.py\" subagent" } ] }
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+runs/**/*.pt
+runs/**/*.pth
+runs/**/*.bin
+runs/**/*.safetensors
+runs/**/checkpoint*/
+.claude/settings.local.json

@@ -1,0 +1,40 @@
+# 预期结果卡（ERC）。随本轮的 lock commit 入库即为锁定。锁定后修改 = 协议偏离（新版本 + 重新批准）
+exp_id: R03-E1
+round: R03
+version: 1
+title: ""
+hypothesis_ref: H-000
+charter_trace: [G1]
+parent: {exp: champion, config: "", commit: ""}
+change: "相对 parent 的唯一改动"
+implementation: {kind: config_only, files: [], flag: ""}   # kind: config_only | code_change
+seeds: [1, 2, 3]
+budget: {gpu_ids: "0,1,2,3", est_wall_h: 0, est_gpu_h: 0, basis: "ev:…"}
+checkpoint_rule: last            # last | dev_best（dev_best 有乐观偏差，分析时须注明）
+primary_metric:
+  name: ""
+  split: dev
+  direction: increase
+  expected_delta: ""
+  plausible_range: ["", ""]
+  basis: ["ev:…"]
+guardrails: [{name: "", rule: ""}]
+analysis_plan:
+  compare_to: parent             # 同种子、同步数
+  unit: per_example_paired_bootstrap   # 没有逐样本预测时：seed_level
+  n_boot: 10000
+  alpha: 0.05
+  correction: holm
+success_criterion: "holm 校正后 Δ 的 95% CI 下界 > 0，且护栏全部满足"
+stopping:
+  planned_end: {steps: 0}
+  interim_looks: []              # 例：[{at: 0.5, purpose: futility_only}]
+  abort_conditions:
+    - {id: A1, kind: technical_fault, rule: "loss 为 NaN/Inf"}
+    - {id: A2, kind: resource_overrun, rule: "实耗 GPU·h > 1.3 × est_gpu_h"}
+    - {id: A3, kind: data_fault, rule: "数据加载报错，或样本数与 project_card 不符"}
+    # 可选类型（ra2a_261021 §9.4）：safety_or_ethics（如 adverse_event_reported）、
+    # futility（如 at 50% steps, upper CI of effect < 0；interim_looks 只许 futility_only）
+exploratory_allowed: []
+evidence_refs: []
+rubric_version: ""

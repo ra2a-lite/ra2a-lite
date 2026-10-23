@@ -1,0 +1,40 @@
+# RA2A-Lite：Codex 命令规则（Starlark）。只在信任本项目后加载。修改须研究员批准。
+# 有多条规则同时匹配时，取最严格的决定：forbidden > prompt > allow。
+
+# 训练与 GPU 作业只能由研究员经 launch.sh 启动（AGENTS.md 规则 1）
+prefix_rule(pattern = ["torchrun"], decision = "forbidden",
+            justification = "训练只能由研究员在终端运行 launch.sh 启动")
+prefix_rule(pattern = ["accelerate", "launch"], decision = "forbidden",
+            justification = "训练只能由研究员启动")
+prefix_rule(pattern = ["deepspeed"], decision = "forbidden",
+            justification = "训练只能由研究员启动")
+prefix_rule(pattern = [["python", "python3"], "-m", ["torch.distributed.run", "torch.distributed.launch"]],
+            decision = "forbidden", justification = "训练只能由研究员启动")
+prefix_rule(pattern = ["nohup"], decision = "forbidden",
+            justification = "智能体不得启动常驻进程")
+prefix_rule(pattern = ["tmux", ["new-session", "new"]], decision = "forbidden",
+            justification = "智能体不得启动常驻会话；训练由研究员运行 launch.sh")
+prefix_rule(pattern = ["env"], decision = "prompt",
+            justification = "env 可能被用来改写 CUDA_VISIBLE_DEVICES，需研究员确认")
+
+# 终止进程：由研究员确认
+prefix_rule(pattern = ["tmux", "kill-session"], decision = "prompt",
+            justification = "终止训练须有 abort 证据或研究员决定")
+prefix_rule(pattern = [["kill", "pkill"]], decision = "prompt",
+            justification = "终止进程须研究员确认")
+
+# git：禁止改写历史；提交须确认
+prefix_rule(pattern = ["git", ["push", "reset", "rebase", "clean", "restore"]], decision = "forbidden",
+            justification = "历史与远端由研究员管理（AGENTS.md 规则 7）")
+prefix_rule(pattern = ["git", "commit", "--amend"], decision = "forbidden",
+            justification = "锁定提交不得改写")
+prefix_rule(pattern = ["git", "checkout", "--"], decision = "forbidden",
+            justification = "不得丢弃改动")
+prefix_rule(pattern = ["git", "commit"], decision = "prompt",
+            justification = "锁定与记忆提交须研究员确认")
+
+# 权限与删除
+prefix_rule(pattern = [["sudo", "chmod", "chown", "chattr"]], decision = "forbidden",
+            justification = "OS 权限由研究员管理")
+prefix_rule(pattern = ["rm", ["-rf", "-fr", "-r"]], decision = "forbidden",
+            justification = "删除由研究员执行")

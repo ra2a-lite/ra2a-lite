@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1",
+    "CLAUDE_CODE_FORK_SUBAGENT": "0",
+    "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1"
+  },
+  "autoMemoryEnabled": false,
+  "cleanupPeriodDays": 365,
+  "permissions": {
+    "defaultMode": "default",
+    "disableBypassPermissionsMode": "disable",
+    "allow": [
+      "Edit(./research/rounds/**)",
+      "Edit(./research/STATUS.md)",
+      "Edit(./research/project_card.md)",
+      "Edit(./research/memory/proposals/**)",
+      "Edit(./research/audits/**)",
+      "Bash(git status *)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git show *)",
+      "Bash(git ls-files *)",
+      "Bash(git rev-parse *)",
+      "Bash(git hash-object *)",
+      "Bash(git add *)",
+      "Bash(nvidia-smi *)",
+      "Bash(df *)",
+      "Bash(du *)",
+      "Bash(tail *)",
+      "Bash(head *)",
+      "Bash(wc *)",
+      "Bash(sha256sum *)",
+      "Bash(tmux ls *)",
+      "Bash(printenv CUDA_VISIBLE_DEVICES)",
+      "Bash(python3 -m py_compile *)",
+      "Bash(claude --version)",
+      "Bash(codex --version)"
+    ],
+    "ask": [
+      "Edit(./research/charter.md)",
+      "Edit(./research/rubric.md)",
+      "Edit(./research/PROTOCOL.md)",
+      "Edit(./research/templates/**)",
+      "Edit(./research/memory/*.md)",
+      "Edit(./research/rounds/*/decision.md)",
+      "Edit(./AGENTS.md)",
+      "Edit(./CLAUDE.md)",
+      "Edit(./.claude/**)",
+      "Edit(./.agents/**)",
+      "Edit(./.codex/**)",
+      "Bash(git commit *)",
+      "Bash(bash research/rounds/*)",
+      "Bash(python3 research/rounds/*)",
+      "Bash(tmux kill-session *)",
+      "Bash(kill *)",
+      "Bash(pkill *)",
+      "Bash(rm *)"
+    ],
+    "deny": [
+      "Edit(./research/ledger/**)",
+      "Edit(./research/hooks/**)",
+      "Edit(./runs/**)",
+      "Read(./runs/**/.token)",
+      "Edit(./eval/**)",
+      "Edit(./data/**)",
+      "Read(./data/test/**)",
+      "Bash(torchrun *)",
+      "Bash(accelerate launch *)",
+      "Bash(deepspeed *)",
+      "Bash(python -m torch.distributed.run *)",
+      "Bash(python3 -m torch.distributed.run *)",
+      "Bash(CUDA_VISIBLE_DEVICES=*)",
+      "Bash(export CUDA_VISIBLE_DEVICES*)",
+      "Bash(env CUDA_VISIBLE_DEVICES*)",
+      "Bash(unset CUDA_VISIBLE_DEVICES*)",
+      "Bash(git push *)",
+      "Bash(git reset *)",
+      "Bash(git rebase *)",
+      "Bash(git commit --amend*)",
+      "Bash(git clean *)",
+      "Bash(git restore *)",
+      "Bash(git checkout -- *)",
+      "Bash(sudo *)",
+      "Bash(chmod *)",
+      "Bash(chown *)",
+      "Bash(chattr *)",
+      "Bash(rm -rf *)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/research/hooks/ra_log.py\" session"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/research/hooks/ra_log.py\" human"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/research/hooks/ra_log.py\" subagent"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/research/hooks/ra_log.py\" compact"
+          }
+        ]
+      }
+    ]
+  }
+}
