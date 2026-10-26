@@ -1,0 +1,187 @@
+[
+  {
+    "argv": [
+      "codex",
+      "execpolicy",
+      "check",
+      "--rules",
+      ".codex/rules/ra.rules",
+      "--",
+      "python3",
+      "research/rounds/R00/work/analyst/check.py"
+    ],
+    "rc": 0,
+    "stdout": "{\"matchedRules\":[]}\n",
+    "stderr": "WARNING: proceeding, even though we could not create PATH aliases: Read-only file system (os error 30)\n",
+    "candidate_executed": false,
+    "policy_result": {
+      "matchedRules": []
+    }
+  },
+  {
+    "argv": [
+      "codex",
+      "execpolicy",
+      "check",
+      "--rules",
+      ".codex/rules/ra.rules",
+      "--",
+      "bash",
+      "research/rounds/R00/work/check.sh"
+    ],
+    "rc": 0,
+    "stdout": "{\"matchedRules\":[]}\n",
+    "stderr": "WARNING: proceeding, even though we could not create PATH aliases: Read-only file system (os error 30)\n",
+    "candidate_executed": false,
+    "policy_result": {
+      "matchedRules": []
+    }
+  },
+  {
+    "argv": [
+      "codex",
+      "execpolicy",
+      "check",
+      "--rules",
+      ".codex/rules/ra.rules",
+      "--",
+      "env",
+      "CUDA_VISIBLE_DEVICES=",
+      "python3",
+      "analysis.py"
+    ],
+    "rc": 0,
+    "stdout": "{\"matchedRules\":[{\"prefixRuleMatch\":{\"matchedPrefix\":[\"env\"],\"decision\":\"prompt\",\"justification\":\"env 可能被用来改写 CUDA_VISIBLE_DEVICES，需研究员确认\"}}],\"decision\":\"prompt\"}\n",
+    "stderr": "WARNING: proceeding, even though we could not create PATH aliases: Read-only file system (os error 30)\n",
+    "candidate_executed": false,
+    "policy_result": {
+      "matchedRules": [
+        {
+          "prefixRuleMatch": {
+            "matchedPrefix": [
+              "env"
+            ],
+            "decision": "prompt",
+            "justification": "env 可能被用来改写 CUDA_VISIBLE_DEVICES，需研究员确认"
+          }
+        }
+      ],
+      "decision": "prompt"
+    }
+  },
+  {
+    "argv": [
+      "codex",
+      "execpolicy",
+      "check",
+      "--rules",
+      ".codex/rules/ra.rules",
+      "--",
+      "env",
+      "PYTHONHASHSEED=0",
+      "python3",
+      "analysis.py"
+    ],
+    "rc": 0,
+    "stdout": "{\"matchedRules\":[{\"prefixRuleMatch\":{\"matchedPrefix\":[\"env\"],\"decision\":\"prompt\",\"justification\":\"env 可能被用来改写 CUDA_VISIBLE_DEVICES，需研究员确认\"}}],\"decision\":\"prompt\"}\n",
+    "stderr": "WARNING: proceeding, even though we could not create PATH aliases: Read-only file system (os error 30)\n",
+    "candidate_executed": false,
+    "policy_result": {
+      "matchedRules": [
+        {
+          "prefixRuleMatch": {
+            "matchedPrefix": [
+              "env"
+            ],
+            "decision": "prompt",
+            "justification": "env 可能被用来改写 CUDA_VISIBLE_DEVICES，需研究员确认"
+          }
+        }
+      ],
+      "decision": "prompt"
+    }
+  },
+  {
+    "argv": [
+      "codex",
+      "execpolicy",
+      "check",
+      "--rules",
+      ".codex/rules/ra.rules",
+      "--",
+      "git",
+      "status",
+      "--short"
+    ],
+    "rc": 0,
+    "stdout": "{\"matchedRules\":[]}\n",
+    "stderr": "WARNING: proceeding, even though we could not create PATH aliases: Read-only file system (os error 30)\n",
+    "candidate_executed": false,
+    "policy_result": {
+      "matchedRules": []
+    }
+  },
+  {
+    "argv": [
+      "codex",
+      "execpolicy",
+      "check",
+      "--rules",
+      ".codex/rules/ra.rules",
+      "--",
+      "git",
+      "commit",
+      "-m",
+      "policy-query-only"
+    ],
+    "rc": 0,
+    "stdout": "{\"matchedRules\":[{\"prefixRuleMatch\":{\"matchedPrefix\":[\"git\",\"commit\"],\"decision\":\"prompt\",\"justification\":\"锁定与记忆提交须研究员确认\"}}],\"decision\":\"prompt\"}\n",
+    "stderr": "WARNING: proceeding, even though we could not create PATH aliases: Read-only file system (os error 30)\n",
+    "candidate_executed": false,
+    "policy_result": {
+      "matchedRules": [
+        {
+          "prefixRuleMatch": {
+            "matchedPrefix": [
+              "git",
+              "commit"
+            ],
+            "decision": "prompt",
+            "justification": "锁定与记忆提交须研究员确认"
+          }
+        }
+      ],
+      "decision": "prompt"
+    }
+  },
+  {
+    "argv": [
+      "codex",
+      "execpolicy",
+      "check",
+      "--rules",
+      ".codex/rules/ra.rules",
+      "--",
+      "torchrun",
+      "--help"
+    ],
+    "rc": 0,
+    "stdout": "{\"matchedRules\":[{\"prefixRuleMatch\":{\"matchedPrefix\":[\"torchrun\"],\"decision\":\"forbidden\",\"justification\":\"训练只能由研究员在终端运行 launch.sh 启动\"}}],\"decision\":\"forbidden\"}\n",
+    "stderr": "WARNING: proceeding, even though we could not create PATH aliases: Read-only file system (os error 30)\n",
+    "candidate_executed": false,
+    "policy_result": {
+      "matchedRules": [
+        {
+          "prefixRuleMatch": {
+            "matchedPrefix": [
+              "torchrun"
+            ],
+            "decision": "forbidden",
+            "justification": "训练只能由研究员在终端运行 launch.sh 启动"
+          }
+        }
+      ],
+      "decision": "forbidden"
+    }
+  }
+]

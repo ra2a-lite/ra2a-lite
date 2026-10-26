@@ -1,0 +1,140 @@
+{
+  "root": "/data/wangshirui/ra2a/demo-revised",
+  "cuda_visible_devices_for_subprocesses": "",
+  "claude": {
+    "argv": [
+      "claude",
+      "--version"
+    ],
+    "rc": 0,
+    "stdout": "2.1.247 (Claude Code)\n",
+    "stderr": ""
+  },
+  "codex": {
+    "argv": [
+      "codex",
+      "--version"
+    ],
+    "rc": 0,
+    "stdout": "codex-cli 0.164.0\n",
+    "stderr": "WARNING: proceeding, even though we could not create PATH aliases: Read-only file system (os error 30)\n"
+  },
+  "bwrap_in_path": null,
+  "claude_sandbox_in_project_settings": null,
+  "claude_permissions": {
+    "defaultMode": "default",
+    "disableBypassPermissionsMode": "disable",
+    "allow": [
+      "Edit(./research/rounds/**)",
+      "Edit(./research/STATUS.md)",
+      "Edit(./research/project_card.md)",
+      "Edit(./research/memory/proposals/**)",
+      "Edit(./research/audits/**)",
+      "Bash(git status *)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git show *)",
+      "Bash(git ls-files *)",
+      "Bash(git rev-parse *)",
+      "Bash(git hash-object *)",
+      "Bash(git add *)",
+      "Bash(nvidia-smi *)",
+      "Bash(df *)",
+      "Bash(du *)",
+      "Bash(tail *)",
+      "Bash(head *)",
+      "Bash(wc *)",
+      "Bash(sha256sum *)",
+      "Bash(tmux ls *)",
+      "Bash(printenv CUDA_VISIBLE_DEVICES)",
+      "Bash(python3 -m py_compile *)",
+      "Bash(claude --version)",
+      "Bash(codex --version)"
+    ],
+    "ask": [
+      "Edit(./research/charter.md)",
+      "Edit(./research/rubric.md)",
+      "Edit(./research/PROTOCOL.md)",
+      "Edit(./research/templates/**)",
+      "Edit(./research/memory/*.md)",
+      "Edit(./research/rounds/*/decision.md)",
+      "Edit(./AGENTS.md)",
+      "Edit(./CLAUDE.md)",
+      "Edit(./.claude/**)",
+      "Edit(./.agents/**)",
+      "Edit(./.codex/**)",
+      "Bash(git commit *)",
+      "Bash(bash research/rounds/*)",
+      "Bash(python3 research/rounds/*)",
+      "Bash(tmux kill-session *)",
+      "Bash(kill *)",
+      "Bash(pkill *)",
+      "Bash(rm *)"
+    ],
+    "deny": [
+      "Edit(./research/ledger/**)",
+      "Edit(./research/hooks/**)",
+      "Edit(./runs/**)",
+      "Read(./runs/**/.token)",
+      "Edit(./eval/**)",
+      "Edit(./data/**)",
+      "Read(./data/test/**)",
+      "Bash(torchrun *)",
+      "Bash(accelerate launch *)",
+      "Bash(deepspeed *)",
+      "Bash(python -m torch.distributed.run *)",
+      "Bash(python3 -m torch.distributed.run *)",
+      "Bash(CUDA_VISIBLE_DEVICES=*)",
+      "Bash(export CUDA_VISIBLE_DEVICES*)",
+      "Bash(env CUDA_VISIBLE_DEVICES*)",
+      "Bash(unset CUDA_VISIBLE_DEVICES*)",
+      "Bash(git push *)",
+      "Bash(git reset *)",
+      "Bash(git rebase *)",
+      "Bash(git commit --amend*)",
+      "Bash(git clean *)",
+      "Bash(git restore *)",
+      "Bash(git checkout -- *)",
+      "Bash(sudo *)",
+      "Bash(chmod *)",
+      "Bash(chown *)",
+      "Bash(chattr *)",
+      "Bash(rm -rf *)"
+    ]
+  },
+  "git_status_at_collection": {
+    "argv": [
+      "git",
+      "status",
+      "--short"
+    ],
+    "rc": 0,
+    "stdout": " M research/ledger/events.jsonl\n M research/ledger/human_inputs.jsonl\n M research/ledger/subagent_outputs.jsonl\n?? research/audits/R00-2026-10-23.md\n?? research/audits/permissions-2026-10-26/\n",
+    "stderr": ""
+  },
+  "protected_status_at_collection": {
+    "argv": [
+      "git",
+      "status",
+      "--porcelain",
+      "--",
+      "AGENTS.md",
+      "CLAUDE.md",
+      ".claude",
+      ".agents",
+      ".codex",
+      "research/charter.md",
+      "research/rubric.md",
+      "research/PROTOCOL.md",
+      "research/hooks",
+      "research/templates",
+      "research/memory/knowledge.md",
+      "research/memory/negative_results.md",
+      "research/memory/hypotheses.md",
+      "research/memory/playbook.md"
+    ],
+    "rc": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+}

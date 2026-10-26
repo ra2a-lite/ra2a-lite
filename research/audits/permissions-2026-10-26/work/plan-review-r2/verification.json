@@ -1,0 +1,9 @@
+{
+  "plan_version": "v2.4-plan-2",
+  "plan_sha256": "3ce2f280145cba25d39096b37c6c35365556b250d283cba2f88f2ffc0d673541",
+  "local_evidence_pointers": 92,
+  "protected_source_files_checked": 17,
+  "review_originals_preserved": true,
+  "errors": [],
+  "scope": "指针与文件一致性；不表示执行模式、隔离或批准入口已经实测"
+}

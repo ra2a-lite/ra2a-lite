@@ -1,0 +1,61 @@
+{
+  "plan_1_sha256": "a271b1be8f45dc0753ffbc1fcef30798ba854cd7a63465d5aa7c17b72fc8b90d",
+  "review_sha256": "1ec6dd5bf81f87ec193e127dc9dc3fa2ac8b179f3dc63f735750ec3d6c9c2ff6",
+  "protected_source_hashes": {
+    "AGENTS.md": {
+      "sha256": "1dcebc0c46c9303b4b4b0e49ed8bf5b5b332521f7a38f539230a1b83ee09b754"
+    },
+    "CLAUDE.md": {
+      "sha256": "cda6db6763b96d6854449598c27209c6054837ffec1b5cf6fe47404a5de3c3db"
+    },
+    ".claude/settings.json": {
+      "sha256": "a2eae394cb1664114185d734c7c99118a357de6baf57bbde851a3b6e02e9cc4e"
+    },
+    ".codex/config.toml": {
+      "sha256": "f8aea81633648853fc580c70b7ec4d3327b292e7220ba3f2b78245c38a3e7b45"
+    },
+    ".codex/rules/ra.rules": {
+      "sha256": "9237394cf1e37131b33ab5604d191745051c1a961f73a3a19b23f0d51f06ebb6"
+    },
+    ".codex/hooks.json": {
+      "sha256": "b10bc91d044f8164164f696e30a7f68138192c0669ad8d2803f41c7ab65494e8"
+    },
+    "research/PROTOCOL.md": {
+      "sha256": "a773f1a3daf1e9636d7242a624e040ccafdde121bda3980d643182820c2857c9"
+    },
+    "research/charter.md": {
+      "sha256": "861105fad153797d03addf14de8ba0e96e64fea6b164ed9537836b274c15cb3f"
+    },
+    "PATCH-v2.3.md": {
+      "sha256": "75f695402f2c7d9e9614366fab18bfba915917f92f92b236bcbf2ecd2400956a"
+    },
+    "research/hooks/ra_log.py": {
+      "sha256": "2100afabfbf216262748c15f4f0c38b1a83339bfce9394c20b5b49bf74ae74de"
+    },
+    "research/templates/launch.sh": {
+      "sha256": "7d8b8a33e3268b30333778bda7df05eb04612daccf84780f6854930808e5168a"
+    },
+    ".agents/skills/ra-round/SKILL.md": {
+      "sha256": "976669a0569af5b42bc48789743e91b599edb70154e6a50baca2e6451288ea9d"
+    },
+    ".agents/skills/ra-init/SKILL.md": {
+      "sha256": "c0d129f1810da668b0effc686e72976f3cdf115b0a7708505c4302f7a5e9d622"
+    },
+    ".agents/skills/ra-memory/SKILL.md": {
+      "sha256": "a3b0b214cc845e5b53f6f73e2e6fa12444504878b82c5f3560cf85b5bfeb6f75"
+    },
+    ".agents/skills/ra-launch/SKILL.md": {
+      "sha256": "5f57b022a4e0c2b2faae602452dbab97f2277d2eb7320a8d48de9c0b8b24d1d9"
+    },
+    ".agents/skills/ra-audit/SKILL.md": {
+      "sha256": "ae8fb6944dac3ddebd5e2e8f7a088667647cdad3e931f79387afe3f427a34579"
+    },
+    ".agents/skills/ra-status/SKILL.md": {
+      "sha256": "bfca43fb26f2014473e1b7fce339990bc998265d4d351956410898591756361f"
+    }
+  },
+  "review_files": {
+    "update/claude_review_auto_mode.md": "b5a2f726d98a8e0e5906f2debe3fd96151c792a31b1f81ca533b86eab684d634",
+    "update/claude_review_auto_mode_2.md": "2c558e7c5a046b8493fcf7ab997c3221d3cb92e6414e2e34c3a5307873e36a61"
+  }
+}

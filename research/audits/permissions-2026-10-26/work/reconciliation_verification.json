@@ -1,0 +1,7 @@
+{
+  "local_evidence_pointers": 80,
+  "source_files_hashed": 37,
+  "prior_source_files_checked": 17,
+  "errors": [],
+  "scope": "可解析性与源码一致性校验；不替代语义核验或运行时验收"
+}

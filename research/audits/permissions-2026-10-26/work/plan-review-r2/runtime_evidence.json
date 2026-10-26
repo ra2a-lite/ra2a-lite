@@ -1,0 +1,18 @@
+{
+  "claude_version": {
+    "argv": [
+      "claude",
+      "--version"
+    ],
+    "rc": 0,
+    "stdout": "2.1.247 (Claude Code)\n",
+    "stderr": ""
+  },
+  "permission_mode_option_advertised": true,
+  "dontAsk_choice_advertised": true,
+  "permission_prompts_option_advertised": false,
+  "runtime_permission_tests_run": false,
+  "new_agent_sessions_started": false,
+  "docker_socket_connections_attempted": false,
+  "protected_configuration_changed": false
+}

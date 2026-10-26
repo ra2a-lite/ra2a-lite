@@ -1,0 +1,98 @@
+{
+  "review_files": [
+    "update/claude_review_auto_mode.md",
+    "update/claude_review_auto_mode_2.md"
+  ],
+  "source_hashes": {
+    ".agents/skills/ra-audit/SKILL.md": "ae8fb6944dac3ddebd5e2e8f7a088667647cdad3e931f79387afe3f427a34579",
+    ".agents/skills/ra-init/SKILL.md": "c0d129f1810da668b0effc686e72976f3cdf115b0a7708505c4302f7a5e9d622",
+    ".agents/skills/ra-launch/SKILL.md": "5f57b022a4e0c2b2faae602452dbab97f2277d2eb7320a8d48de9c0b8b24d1d9",
+    ".agents/skills/ra-memory/SKILL.md": "a3b0b214cc845e5b53f6f73e2e6fa12444504878b82c5f3560cf85b5bfeb6f75",
+    ".agents/skills/ra-round/SKILL.md": "976669a0569af5b42bc48789743e91b599edb70154e6a50baca2e6451288ea9d",
+    ".agents/skills/ra-status/SKILL.md": "bfca43fb26f2014473e1b7fce339990bc998265d4d351956410898591756361f",
+    ".claude/agents/ra-analyst.md": "d07422511adfda70cf9ba4fabf62d585ff959b85b7309ba2d4bf1ea683e03588",
+    ".claude/agents/ra-designer.md": "a918778040bf00eec5250d0a09d60df64a091c2c7ff3db22448265ddc0ffd7a2",
+    ".claude/agents/ra-judge.md": "fe8da1c0a32ccdb01f8233e768d8e32f68081fa3e999a4beb184de87269aa624",
+    ".claude/agents/ra-skeptic.md": "540731ea634f4499bcec1b9d8052bd4e239046c38cae397609f8e18c54f176dc",
+    ".claude/agents/ra-verifier.md": "ba7706857edbe0975d4d0452b13522efd4f4326373de0b211f8458f372a3a958",
+    ".claude/settings.json": "a2eae394cb1664114185d734c7c99118a357de6baf57bbde851a3b6e02e9cc4e",
+    ".codex/agents/ra-analyst.toml": "5c8e3d9641c2c38555c068ed62470f8e9a21553d0289f5dd6caca934e7aeb15b",
+    ".codex/agents/ra-designer.toml": "ef1b0064fe552ff34f3b118661f3b8a1a546eae83a299f28866925fcd1680cb6",
+    ".codex/agents/ra-judge.toml": "e406480b5e5faab1afe096a30dc16005bd42ecfb78f650d7ad116189847fc3ea",
+    ".codex/agents/ra-skeptic.toml": "43e1ea62dc8f82a28d554ad3f9b4c8dbbbf0cc7af8b699f9ce319cb139eaedcf",
+    ".codex/agents/ra-verifier.toml": "b7e4ce705e587bc84ebcee353dca043051eb4beb201e30476682ea98dc71cbff",
+    ".codex/config.toml": "f8aea81633648853fc580c70b7ec4d3327b292e7220ba3f2b78245c38a3e7b45",
+    ".codex/hooks.json": "b10bc91d044f8164164f696e30a7f68138192c0669ad8d2803f41c7ab65494e8",
+    ".codex/rules/ra.rules": "9237394cf1e37131b33ab5604d191745051c1a961f73a3a19b23f0d51f06ebb6",
+    "AGENTS.md": "1dcebc0c46c9303b4b4b0e49ed8bf5b5b332521f7a38f539230a1b83ee09b754",
+    "CLAUDE.md": "cda6db6763b96d6854449598c27209c6054837ffec1b5cf6fe47404a5de3c3db",
+    "PATCH-v2.3.md": "75f695402f2c7d9e9614366fab18bfba915917f92f92b236bcbf2ecd2400956a",
+    "ra2a_lite_8xa100.md": "301169cec650bc9b732876fcdfc0c85a78170e588d44afffe19794deb87c3edb",
+    "research/PROTOCOL.md": "a773f1a3daf1e9636d7242a624e040ccafdde121bda3980d643182820c2857c9",
+    "research/audits/R00-2026-10-23.md": "59268720fb1bda18b1e7a2ec3f9d8cc947b8e893fe7244e077605cb20ce37e01",
+    "research/audits/permissions-2026-10-26.md": "0ea55e352e01d179cf6104b0ab0bee7827d913b89945499ef02d0eb7c7bb347f",
+    "research/charter.md": "861105fad153797d03addf14de8ba0e96e64fea6b164ed9537836b274c15cb3f",
+    "research/hooks/ra_log.py": "2100afabfbf216262748c15f4f0c38b1a83339bfce9394c20b5b49bf74ae74de",
+    "research/templates/brief.md": "4989fc121e6b03d0eb42478655c37c8962c6928357d05b46b93b8cc8fca661e1",
+    "research/templates/decision.md": "f934388089628ee77b343d53e8c3d04d3a45c1efb5a00afb60cd94eb9a79967a",
+    "research/templates/erc.yaml": "73b74c05023550cba80f1fe6eb7acc08dbe06efcdf56a188323a2ed348f7fe3c",
+    "research/templates/exp.sh": "82afee297c1c664a0aa751384d2af898307aab188e1b8f20ce508f6284f5174b",
+    "research/templates/launch.sh": "7d8b8a33e3268b30333778bda7df05eb04612daccf84780f6854930808e5168a",
+    "research/templates/meta.yaml": "30dded8cdfba5f95a59644cd76567d7c7b9bf1086dfbfc93e73f436e6cd5fe5a",
+    "update/claude_review_auto_mode.md": "b5a2f726d98a8e0e5906f2debe3fd96151c792a31b1f81ca533b86eab684d634",
+    "update/claude_review_auto_mode_2.md": "2c558e7c5a046b8493fcf7ab997c3221d3cb92e6414e2e34c3a5307873e36a61"
+  },
+  "changed_since_previous_audit": [],
+  "protected_git_status": {
+    "argv": [
+      "git",
+      "status",
+      "--porcelain",
+      "--",
+      "AGENTS.md",
+      "CLAUDE.md",
+      ".claude",
+      ".agents",
+      ".codex",
+      "research/charter.md",
+      "research/rubric.md",
+      "research/PROTOCOL.md",
+      "research/hooks",
+      "research/templates",
+      "research/memory/knowledge.md",
+      "research/memory/negative_results.md",
+      "research/memory/hypotheses.md",
+      "research/memory/playbook.md"
+    ],
+    "rc": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "whitelist_marker_exists": false,
+  "runtime": {
+    "claude": {
+      "argv": [
+        "claude",
+        "--version"
+      ],
+      "rc": 0,
+      "stdout": "2.1.247 (Claude Code)\n",
+      "stderr": ""
+    },
+    "codex": {
+      "argv": [
+        "codex",
+        "--version"
+      ],
+      "rc": 0,
+      "stdout": "codex-cli 0.164.0\n",
+      "stderr": "WARNING: proceeding, even though we could not create PATH aliases: Read-only file system (os error 30)\n"
+    }
+  },
+  "deployment_programs_in_path": {
+    "bwrap": null,
+    "docker": "/usr/bin/docker",
+    "podman": null
+  },
+  "deployment_capabilities_tested": false
+}

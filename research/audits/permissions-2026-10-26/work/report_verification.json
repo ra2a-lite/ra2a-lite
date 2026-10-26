@@ -1,0 +1,7 @@
+{
+  "local_evidence_pointers": 83,
+  "source_hashes_checked": 17,
+  "protected_git_status": "",
+  "errors": [],
+  "scope": "只检查指针可解析性和文件未变；语义支持由报告审核承担"
+}

@@ -8,3 +8,5 @@
 - 单轮预算 / 本轮已用 GPU·h：- / -
 - 待处理记忆提案：0
 - 运行时版本：-
+- 最近治理审核：2026-10-26 权限与人机交互审核完成，改进方案未实施；见 research/audits/permissions-2026-10-26.md
+- 最近方案对账：2026-10-26 已结合 update/plan_review.md 修订至 v2.4-plan-2，尚未实施；见 update/final_modification_plan.md
