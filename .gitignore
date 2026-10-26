@@ -4,3 +4,4 @@ runs/**/*.bin
 runs/**/*.safetensors
 runs/**/checkpoint*/
 .claude/settings.local.json
+__pycache__/

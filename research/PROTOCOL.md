@@ -1,5 +1,5 @@
 # RA2A-Lite 研究协议（本项目版）
-protocol_version: lite-1.0（修改属于 RL3）
+protocol_version: lite-1.1（修改属于 RL3）
 
 ## 1 角色
 | 角色 | 由谁担任 | 能做 | 不能做 |
@@ -150,6 +150,11 @@ printf '{"ts":"%s","exp_id":"%s","event":"ABORTED","abort_id":"%s","by":"researc
 - 驳回 R03: 理由
 - 批准 CR-R03-01
 - 批准重跑 R03-E1: 原因
+
+v2.4 注（lite-1.1，工具确认与研究批准的关系）：
+- RL0 的"不需要批准"指不需要研究员逐次确认的**工具调用**；权限系统的确认弹窗（Python 执行、decision 写入、git commit、受保护文件编辑等）是独立的工具门，不因研究批准而消失，也不构成研究批准。
+- 实现类改动（I 阶段草案）一律以配置开关交付、默认值保持基线行为；B2 隔离边界（update/final_modification_plan.md §5.1）落地后，草案实现须在隔离副本中准备。
+- CPU 上的单元自检、分析脚本不因运行在 CPU 上自动获得研究授权；在 CPU 上运行研究训练或评测仍属资源承诺型副作用，按本表 RL2/RL3 把关。
 
 ## 10 受保护资产
 | 资产 | Claude Code | Codex | 兜底 |

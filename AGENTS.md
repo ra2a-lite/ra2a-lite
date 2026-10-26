@@ -22,6 +22,8 @@
 - 一个训练评测迭代 = 一次人机交互：/ra-round（Codex：ra-round 技能）。
 - 证据：每条可证伪的陈述都带 ev: 指针（PROTOCOL §3）。没有证据就写"未核验"。
 - 方向：每个提案必须写 charter_trace（G#/M#）。章程外的想法记入"章程外观察"，不进入计划。
+- 工具确认：RL0（读取、CPU 分析、写本轮文件、起草提案）不需要研究员逐次确认工具调用；权限系统的确认弹窗是独立的工具门，不因已有研究批准而消失，也不构成研究批准（PROTOCOL §9 v2.4 注）。
+- 草案与基线：实现类改动一律以配置开关交付、默认值保持基线行为；B2 隔离边界（update/final_modification_plan.md §5.1）落地后，草案实现须在隔离副本中准备。CPU 上的单元自检与分析不因运行在 CPU 上自动获得研究授权——在 CPU 上运行研究训练或评测仍是资源承诺型副作用，按 PROTOCOL §9 RL2/RL3 把关。
 - 状态：每完成一个阶段就更新 research/STATUS.md。所有结论都要落盘，对话里说过的不算数。
 - 记忆：新发现、负结果、经验只能写成 research/memory/proposals/CR-*.md，经 /ra-memory 由研究员批准后生效。
 - 诚实：负结果、失败、不确定性照实报告；严格区分 confirmatory 与 exploratory。

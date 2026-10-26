@@ -64,7 +64,7 @@ def sha256_file(p):
     return h.hexdigest()
 
 
-def iter_files(patterns):
+def iter_files(patterns, exclude_dir=None):
     seen = {}
     for pat in patterns:
         for p in sorted(ROOT.glob(pat)):
@@ -73,17 +73,19 @@ def iter_files(patterns):
             rel = str(p.relative_to(ROOT))
             if any(part in EXCLUDE_PARTS for part in p.parts) or p.name in EXCLUDE_NAMES:
                 continue
+            if exclude_dir is not None and str(exclude_dir.resolve()) in str(p.resolve()):
+                continue  # 排除清单自身的输出目录，避免自引用
             seen[rel] = True
     return sorted(seen)
 
 
-def collect():
+def collect(exclude_dir=None):
     files = {}
-    for rel in iter_files(PROTECTED_PATTERNS):
+    for rel in iter_files(PROTECTED_PATTERNS, exclude_dir):
         p = ROOT / rel
         files[rel] = {"sha256": sha256_file(p), "bytes": p.stat().st_size}
     snapshot = {}
-    for rel in iter_files(SNAPSHOT_PATTERNS):
+    for rel in iter_files(SNAPSHOT_PATTERNS, exclude_dir):
         p = ROOT / rel
         n_lines = None
         try:
@@ -108,7 +110,8 @@ def collect():
 
 
 def build(out_dir):
-    files, snapshot, symlinks, external = collect()
+    out = pathlib.Path(out_dir)
+    files, snapshot, symlinks, external = collect(out.resolve() if out.exists() else (out.absolute()))
     manifest = {
         "generated_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
         "purpose": "RA2A-Lite demo-revised B0 基线（update/final_modification_plan.md §3）",
@@ -128,7 +131,6 @@ def build(out_dir):
         "mutable_snapshot": snapshot,
         "symlinks": symlinks,
     }
-    out = pathlib.Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     (out / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     lines = [
@@ -157,8 +159,15 @@ def build(out_dir):
 
 def verify(manifest_path):
     m = json.loads(pathlib.Path(manifest_path).read_text(encoding="utf-8"))
-    base = m["protected_files"]
-    cur = collect()[0]
+    mdir = pathlib.Path(manifest_path).parent.resolve()
+    try:
+        prefix = mdir.relative_to(ROOT).as_posix() + "/"
+    except ValueError:
+        prefix = None
+    # 清单目录内的条目两侧都忽略：清单不可能稳定包含自身哈希
+    drop = (lambda rel: prefix is not None and rel.startswith(prefix))
+    base = {k: v for k, v in m["protected_files"].items() if not drop(k)}
+    cur = {k: v for k, v in collect(mdir)[0].items() if not drop(k)}
     base_set, cur_set = set(base), set(cur)
     changed = sorted(r for r in base_set & cur_set if base[r]["sha256"] != cur[r]["sha256"])
     added = sorted(cur_set - base_set)

@@ -92,3 +92,15 @@
 | P2 裁决项 | 待研究员 | D1（治理子代理含 Bash/Write 的显式声明）、D4/D5（ERC hash 绑定）、D7（P5 评分设计）——见定稿报告 §3 |
 | Codex 侧 | 未适配 | `.codex/` 保持原版；rules 中 python 本就 prompt |
 | 账本 | 已清空 | 原值在 `../demo/` 与 demo-fixed 存档 |
+
+---
+
+## 5. v2.4 处置记录（2026-10-26 追加；上文历史判断保留原文，不回写）
+
+| 本文件位置 | v2.4 处置 | 依据 |
+|---|---|---|
+| §2.1"现状：放行" | **已中止**：settings.json 已写入 `disableAutoMode: "disable"`（即 §2.4 恢复步骤 1）。本次为 B2 隔离验收与目标版本回归通过前的过渡禁用；届时恢复 auto 须以新版本发布并登记，不回改本节 | update/final_modification_plan.md §4.1 第 6 项、§2.1 PR02/D06；实施记录见 PATCH-v2.4.md |
+| §2.3"分类器可能自动放行""零弹窗链"等表述 | 语义更正（D03）：按当前官方规则优先级，显式 ask 高于 auto 分类器，"切到 auto"不能当作移除弹窗的手段；本机 2.1.247 的逐项 UI 行为仍未核验 | update/final_modification_plan.md §2 D03；research/audits/permissions-2026-10-26.md §2 |
+| §4"Codex 侧……rules 中 python 本就 prompt" | 事实更正（D05）：当前 `.codex/rules/ra.rules` 没有通用 Python prompt，离线 execpolicy 查询亦未命中；Codex 侧配置在 v2.4 未改动 | update/final_modification_plan.md §2 D05；research/audits/permissions-2026-10-26/work/policy_checks.json |
+| §4"K9 / 白名单激活：休眠交付" | 状态不变（`research/hooks/.whitelist_on` 仍不存在）；D09 已实测核对标记文件确实缺失，与本文描述一致 | update/final_modification_plan.md §2 D09 |
+| §1b 中 settings.json、CLAUDE.md 两行 | 已被 v2.4 进一步修改（精确 allow、只记账 hook、权限模式章节、auto 禁用）；当前全文一律以仓库实际文件与 Lite §5 为准 | PATCH-v2.4.md §4；ra2a_lite_8xa100.md §5 横幅 |

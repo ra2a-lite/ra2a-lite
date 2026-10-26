@@ -8,5 +8,6 @@
 - 单轮预算 / 本轮已用 GPU·h：- / -
 - 待处理记忆提案：0
 - 运行时版本：-
-- 最近治理审核：2026-10-26 权限与人机交互审核完成，改进方案未实施；见 research/audits/permissions-2026-10-26.md
-- 最近方案对账：2026-10-26 已结合 update/plan_review.md 修订至 v2.4-plan-2，尚未实施；见 update/final_modification_plan.md
+- 包版本：v2.4（版本说明见 CHANGELOG.md；git tag v2.4）
+- 最近治理审核：2026-10-26 权限与人机交互审核完成，其 B0+B1 改进已实施为包版本 v2.4（B2–B4 未实施，门条件见 update/final_modification_plan.md §9）；审核报告见 research/audits/permissions-2026-10-26.md
+- 最近方案对账：2026-10-26 v2.4-plan-2 的 B0（基线锁定）与 B1（白天减负+规则语义修正）已实施；实施记录见 PATCH-v2.4.md，逐项对账见 update/final_modification_plan.md §2

@@ -62,11 +62,18 @@ PAIRS = [
     (".codex/agents/ra-verifier.toml", "verbatim"),
 ]
 
-LOOKBACK = 12  # 从围栏向上找锚点（含路径的行）的最大行数
+LOOKBACK = 12  # 从围栏向上找锚点的最大行数
+
+
+def is_anchor(line, repo_path):
+    """锚点行 = 行首就是反引号包裹的完整路径（可带尾注），或 §5 小节标题。"""
+    s = line.strip()
+    tok = "`%s`" % repo_path
+    return s.startswith(tok) or (s.startswith("#") and tok in s)
 
 
 def find_fence(lines, repo_path):
-    """返回 (open_idx, close_idx, anchor_idx)；围栏=以 ~~~ 开头的行。锚点=围栏向上 12 行内包含 repo_path 的最近一行。"""
+    """返回 (open_idx, close_idx, anchor_idx)；围栏=以 ~~~ 开头的行。"""
     for i, ln in enumerate(lines):
         if ln.lstrip().startswith("~~~"):
             anchor = None
@@ -74,7 +81,7 @@ def find_fence(lines, repo_path):
                 s = lines[j].strip()
                 if s.startswith("~~~"):      # 上一代码块：越界
                     break
-                if repo_path in s:
+                if is_anchor(lines[j], repo_path):
                     anchor = j
                     break
             if anchor is None:

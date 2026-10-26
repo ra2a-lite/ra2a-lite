@@ -11,12 +11,15 @@
   "permissions": {
     "defaultMode": "default",
     "disableBypassPermissionsMode": "disable",
+    "disableAutoMode": "disable",
     "allow": [
       "Edit(./research/rounds/**)",
       "Edit(./research/STATUS.md)",
       "Edit(./research/project_card.md)",
       "Edit(./research/memory/proposals/**)",
       "Edit(./research/audits/**)",
+      "Edit(./update/**)",
+      "Edit(./research/runtime/checks/**)",
       "Bash(git status *)",
       "Bash(git log *)",
       "Bash(git diff *)",
@@ -25,6 +28,20 @@
       "Bash(git rev-parse *)",
       "Bash(git hash-object *)",
       "Bash(git add *)",
+      "Bash(git tag)",
+      "Bash(git tag -l)",
+      "Bash(git tag -l *)",
+      "Bash(git tag --list)",
+      "Bash(git tag --list *)",
+      "Bash(git tag -n *)",
+      "Bash(git branch --show-current)",
+      "Bash(git stash list)",
+      "Bash(git remote)",
+      "Bash(git remote -v)",
+      "Bash(git describe *)",
+      "Bash(git rev-list *)",
+      "Bash(git cat-file *)",
+      "Bash(git blame *)",
       "Bash(nvidia-smi *)",
       "Bash(df *)",
       "Bash(du *)",
@@ -34,6 +51,21 @@
       "Bash(sha256sum *)",
       "Bash(tmux ls *)",
       "Bash(printenv CUDA_VISIBLE_DEVICES)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(grep *)",
+      "Bash(rg *)",
+      "Bash(stat *)",
+      "Bash(file *)",
+      "Bash(diff *)",
+      "Bash(jq *)",
+      "Bash(which *)",
+      "Bash(realpath *)",
+      "Bash(readlink *)",
+      "Bash(basename *)",
+      "Bash(dirname *)",
+      "Bash(uname *)",
+      "Bash(nproc)",
       "Bash(python3 -m py_compile *)",
       "Bash(claude --version)",
       "Bash(codex --version)"
@@ -51,6 +83,8 @@
       "Edit(./.agents/**)",
       "Edit(./.codex/**)",
       "Bash(git commit *)",
+      "Bash(git tag -a *)",
+      "Bash(git tag -s *)",
       "Bash(bash research/rounds/*)",
       "Bash(python3 research/rounds/*)",
       "Bash(tmux kill-session *)",
@@ -126,6 +160,26 @@
           {
             "type": "command",
             "command": "python3 \"$CLAUDE_PROJECT_DIR/research/hooks/ra_log.py\" compact"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/research/hooks/ra_log.py\" perm_request"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/research/hooks/ra_log.py\" notify"
           }
         ]
       }

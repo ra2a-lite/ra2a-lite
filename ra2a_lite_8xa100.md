@@ -84,7 +84,7 @@
  训练期间：/ra-status（只读：进度、GPU、abort 条件）
 ```
 
-**你需要参与的地方**：⏸ 讨论门（10–30 分钟），以及三次弹窗确认：写 decision.md、锁定提交、启动。其余部分由智能体完成，耗时 20–60 分钟，主要取决于日志规模和所用模型。
+**你需要参与的地方**：⏸ 讨论门（10–30 分钟，亲自输入批准语句），以及研究流程上的人工决定点（RL3 事项、重跑、CR、里程碑确认，见 PROTOCOL §9）。除此之外**不要承诺"零弹窗"或固定次数**：工具层还会出现权限确认（如轮次 Python 脚本执行、decision.md 写入、git commit、受保护文件编辑、git tag 打标）——它们是权限系统的独立工具门，不是研究批准的重复要求；哪些操作免确认取决于 `.claude/settings.json` 的 allow 清单与本机权限模式（v2.4 起默认 default + 精确 allow，auto 临时禁用，见 `PATCH-v2.4.md`）。其余部分由智能体完成，耗时 20–60 分钟，主要取决于日志规模和所用模型。
 
 ---
 
@@ -172,7 +172,7 @@
 
 ## 5 文件全文
 
-> ⚠️ **本 fork 已应用 v2.3 修复补丁**（P0-1a/b/c/d、P0-2、P1-1、P1-2、D10）：本节以下文件全文与仓库实际文件存在**经登记的差异**，逐项见 `PATCH-v2.3.md`（完整依据见 `conformance-final-verdict.md`）。
+> ⚠️ **本包代码块已同步至仓库当前版本（v2.4，2026-10-26）**：一致性由 `python3 research/runtime/checks/lite_doc_sync.py --check` 逐块校验（38 对，0 漂移）。历史差异（v2.3 修复补丁 P0-1a/b/c/d、P0-2、P1-1、P1-2、D10 与 v2.4 的 B0/B1 改造）逐项见 `PATCH-v2.3.md`、`PATCH-v2.4.md`（完整依据见 `conformance-final-verdict.md`）；版本索引见 `CHANGELOG.md`。charter/project_card/STATUS 为模板，实际文件按项目填写，不参与逐字比对。
 
 ### 5.1 `AGENTS.md`
 
@@ -201,6 +201,8 @@
 - 一个训练评测迭代 = 一次人机交互：/ra-round（Codex：ra-round 技能）。
 - 证据：每条可证伪的陈述都带 ev: 指针（PROTOCOL §3）。没有证据就写"未核验"。
 - 方向：每个提案必须写 charter_trace（G#/M#）。章程外的想法记入"章程外观察"，不进入计划。
+- 工具确认：RL0（读取、CPU 分析、写本轮文件、起草提案）不需要研究员逐次确认工具调用；权限系统的确认弹窗是独立的工具门，不因已有研究批准而消失，也不构成研究批准（PROTOCOL §9 v2.4 注）。
+- 草案与基线：实现类改动一律以配置开关交付、默认值保持基线行为；B2 隔离边界（update/final_modification_plan.md §5.1）落地后，草案实现须在隔离副本中准备。CPU 上的单元自检与分析不因运行在 CPU 上自动获得研究授权——在 CPU 上运行研究训练或评测仍是资源承诺型副作用，按 PROTOCOL §9 RL2/RL3 把关。
 - 状态：每完成一个阶段就更新 research/STATUS.md。所有结论都要落盘，对话里说过的不算数。
 - 记忆：新发现、负结果、经验只能写成 research/memory/proposals/CR-*.md，经 /ra-memory 由研究员批准后生效。
 - 诚实：负结果、失败、不确定性照实报告；严格区分 confirmatory 与 exploratory。
@@ -219,15 +221,20 @@
 - 子代理在 .claude/agents/ra-*.md；技能目录 .claude/skills 是 .agents/skills 的符号链接。
 - P1/P3/P4/P8 要在同一条消息里并行发起多个子代理调用。不要 resume 子代理，每次都新开。
 - 讨论门可以用 AskUserQuestion 给研究员列选项；但"批准"必须由研究员亲自输入文字，点选不算。
-- 不使用 bypassPermissions 或 auto 模式，不用后台任务。
 - 上下文被压缩或会话恢复后，先重读 research/STATUS.md 和本轮目录，再继续。
+
+## 权限模式（v2.4 起；依据与验收状态见 PATCH-v2.4.md、CHANGELOG.md）
+- bypassPermissions 永久禁止。auto 模式在 B2 隔离验收与目标版本回归通过前**临时禁用**：settings.json 已设 `disableAutoMode: "disable"`（2026-10-26 起；2026-10-23 的 auto 放行裁决自此中止，恢复/回退步骤见 PATCH-v2.4.md）。
+- 默认模式为 default；普通工作区编辑与只读命令已按精确 allow 减负（settings.json）。acceptEdits 候选配置存于 .claude/candidates/（不加载），须先通过 T01a/T01b 验收，再以新版本发布方式启用。
+- 工具弹窗里的"切到 auto"选项只改变本会话工作模式（disableAutoMode 生效时会被拒绝，该行为待 T01b 实测），**永远不构成研究批准**；权限确认的"允许"点击同样不是研究批准。批准语句必须由研究员亲自在非 auto 会话输入。
+- PermissionRequest / Notification hook 只记账（research/ledger/events.jsonl），不自动放行任何操作，也不构成批准来源。
 ~~~
 
 ### 5.3 `research/PROTOCOL.md`
 
 ~~~markdown
 # RA2A-Lite 研究协议（本项目版）
-protocol_version: lite-1.0（修改属于 RL3）
+protocol_version: lite-1.1（修改属于 RL3）
 
 ## 1 角色
 | 角色 | 由谁担任 | 能做 | 不能做 |
@@ -379,6 +386,11 @@ printf '{"ts":"%s","exp_id":"%s","event":"ABORTED","abort_id":"%s","by":"researc
 - 批准 CR-R03-01
 - 批准重跑 R03-E1: 原因
 
+v2.4 注（lite-1.1，工具确认与研究批准的关系）：
+- RL0 的"不需要批准"指不需要研究员逐次确认的**工具调用**；权限系统的确认弹窗（Python 执行、decision 写入、git commit、受保护文件编辑等）是独立的工具门，不因研究批准而消失，也不构成研究批准。
+- 实现类改动（I 阶段草案）一律以配置开关交付、默认值保持基线行为；B2 隔离边界（update/final_modification_plan.md §5.1）落地后，草案实现须在隔离副本中准备。
+- CPU 上的单元自检、分析脚本不因运行在 CPU 上自动获得研究授权；在 CPU 上运行研究训练或评测仍属资源承诺型副作用，按本表 RL2/RL3 把关。
+
 ## 10 受保护资产
 | 资产 | Claude Code | Codex | 兜底 |
 |---|---|---|---|
@@ -511,6 +523,7 @@ total = 0.20*cost + 0.30*impact + 0.30*info_gain + 0.20*validity
 - 单轮预算 / 本轮已用 GPU·h：- / -
 - 待处理记忆提案：0
 - 运行时版本：-
+- 包版本：v2.4（版本说明见 CHANGELOG.md；本字段随版本发布更新，其余字段由 /ra-* 流程维护）
 ~~~
 
 ### 5.8 `research/memory/`
@@ -608,6 +621,8 @@ stopping:
     - {id: A1, kind: technical_fault, rule: "loss 为 NaN/Inf"}
     - {id: A2, kind: resource_overrun, rule: "实耗 GPU·h > 1.3 × est_gpu_h"}
     - {id: A3, kind: data_fault, rule: "数据加载报错，或样本数与 project_card 不符"}
+    # 可选类型（ra2a_261021 §9.4）：safety_or_ethics（如 adverse_event_reported）、
+    # futility（如 at 50% steps, upper CI of effect < 0；interim_looks 只许 futility_only）
 exploratory_allowed: []
 evidence_refs: []
 rubric_version: ""
@@ -700,6 +715,9 @@ done
 # RA2A-Lite 启动脚本。ra-round 替换 __ROUND__ 和"实验清单"后存为 research/rounds/<R>/launch.sh，随锁定提交入库。
 # 用法：bash research/rounds/<R>/launch.sh                       启动全部已批准实验（已启动过的自动跳过）
 #       bash research/rounds/<R>/launch.sh retry <新id> <源id>    技术故障重跑（须先在 retries.md 登记批准并提交）
+# v2.3 修复（P0-1a）：__run 需携带 start_exp 发放的一次性令牌（三重前置校验，堵"空对空"与无参直调）；
+#                      启动前 check_approval 核验账本批准原文（锚定正则 + 非 auto + 早于锁定提交 + exp 集合覆盖）。
+#                      依据：/data/wangshirui/ra2a/check/demo-conformance-final-verdict.md §3 P0-1a
 set -euo pipefail
 ROUND=__ROUND__
 cd "$(git rev-parse --show-toplevel)"
@@ -708,12 +726,25 @@ LEDGER=research/ledger/runs.jsonl
 log() { printf '{"ts":"%s","exp_id":"%s","event":"%s","gpus":"%s","commit":"%s","rc":%s}\n' \
         "$(date -Is)" "$1" "$2" "${3:-}" "${4:-}" "${5:-null}" >> "$LEDGER"; }
 
-if [ "${1:-}" = "__run" ]; then            # 内部入口：在 tmux/nohup 中实际运行一个实验
-  EXP=$2; GPUS=$3; SCRIPT=$4; DIR=runs/$EXP
+if [ "${1:-}" = "__run" ]; then            # 内部入口：在 tmux/nohup 中实际运行一个实验（须携带一次性令牌）
+  EXP=$2; GPUS=$3; SCRIPT=$4; TOKEN_ARG="${5:-}"; DIR=runs/$EXP
+  # 三重前置：令牌参数非空 + .token 存在且非空 + 内容一致（v2.1 修正：两侧皆空会使比较为真）
+  if [ -z "$TOKEN_ARG" ] || [ ! -s "$DIR/.token" ] || [ "$TOKEN_ARG" != "$(cat "$DIR/.token")" ]; then
+    echo "✗ __run 令牌缺失或不符。智能体会话请勿直接调用 __run；启动入口是 bash research/rounds/$ROUND/launch.sh"; exit 1
+  fi
   export EXP CUDA_VISIBLE_DEVICES=$GPUS
   set +e; bash "$SCRIPT" > "$DIR/train.log" 2>&1; rc=$?; set -e
   if [ $rc -eq 0 ]; then ev=DONE; else ev=FAILED; fi
   date -Is > "$DIR/$ev"; log "$EXP" "$ev" "$GPUS" "$(cat "$DIR/COMMIT")" "$rc"; exit $rc
+fi
+
+# ---- 启动者检查：智能体会话只有在 launch_mode=B 且运行时为 Claude Code 时才能启动 ----
+AGENT=0
+if [ -n "${CLAUDECODE:-}" ] || [ -n "${CODEX_SANDBOX:-}" ] || [ -n "${CODEX_SANDBOX_NETWORK_DISABLED:-}" ]; then AGENT=1; fi
+if [ "${CUDA_VISIBLE_DEVICES+set}" = set ] && [ -z "${CUDA_VISIBLE_DEVICES}" ]; then AGENT=1; fi
+MODE=$(grep -E '^- launch_mode:' research/charter.md | awk '{print $3}')
+if [ "$AGENT" = 1 ] && { [ "$MODE" != B ] || [ -z "${CLAUDECODE:-}" ]; }; then
+  echo "✗ 检测到智能体会话环境（launch_mode=${MODE:-?}）。请研究员在自己的终端运行本脚本。"; exit 1
 fi
 
 # ---- 预注册与代码检查 ----
@@ -724,18 +755,64 @@ git diff --quiet HEAD -- . ':(exclude)research' ':(exclude)runs' || { echo "✗ 
 [ -z "$(git ls-files --others --exclude-standard -- '*.py')" ] || { echo "✗ 有未跟踪的 .py 文件"; exit 1; }
 COMMIT=$(git rev-parse HEAD)
 
+# ---- 批准核验（v2.3 P0-1a①）：decision.md 的 approved 状态必须有人类批准原文背书 ----
+# 四重校验：锚定正则（覆盖 批准 R03: 与 批准(RL3) R03:，前导"不/勿/别/驳回"判负）；
+#           permission_mode ≠ auto（auto 会话的输入不作批准凭据，P0-2）；
+#           批准 ts 早于锁定提交；start_exp 清单中每个实验都出现在批准语句里。
+check_approval() {
+  local EXPS
+  EXPS=$(grep -E '^start_exp ' "$0" | awk '{print $2}' | paste -sd, -)
+  python3 - "$ROUND" "$EXPS" <<'PYEOF'
+import json, re, subprocess, sys
+from datetime import datetime
+rnd, exps = sys.argv[1], [e for e in sys.argv[2].split(",") if e and not e.startswith("__")]
+pat = re.compile(r"^\s*批准(\s*\(RL3\))?\s+" + re.escape(rnd) + r"\s*[:：]")
+def parse_ts(s):
+    s = re.sub(r"([+-]\d{2})(\d{2})$", r"\1:\2", (s or "").strip())
+    try: return datetime.fromisoformat(s)
+    except ValueError: return None
+lock = subprocess.run(["git", "log", "-1", "--format=%cI", "--", "research/rounds/" + rnd],
+                      capture_output=True, text=True).stdout.strip()
+lock_dt = parse_ts(lock)
+try:
+    fh = open("research/ledger/human_inputs.jsonl", encoding="utf-8")
+except FileNotFoundError:
+    sys.exit("✗ 找不到 research/ledger/human_inputs.jsonl，无法核验批准")
+ok, approved = False, set()
+for line in fh:
+    try: r = json.loads(line)
+    except Exception: continue
+    p = r.get("payload") or {}
+    pr = (p.get("prompt") or "").strip()
+    if not pat.match(pr): continue
+    if pr.startswith(("不", "勿", "别", "驳回")): continue
+    if (p.get("permission_mode") or "") == "auto": continue
+    if lock_dt and (parse_ts(r.get("ts")) or lock_dt) > lock_dt: continue
+    ok = True
+    approved |= set(re.findall(re.escape(rnd) + r"-E\d+(?:\.\d+)?", pr))
+if not ok:
+    sys.exit(f"✗ 账本中无 {rnd} 的合格批准语句（须为非 auto 权限模式、早于锁定提交的 批准/批准(RL3) 原文）")
+missing = [e for e in exps if e not in approved]
+if missing:
+    sys.exit("✗ 以下实验未出现在批准语句中: " + ", ".join(missing))
+PYEOF
+}
+check_approval
+
 start_exp() {   # start_exp <exp_id> <gpu_ids> <exp脚本的完整相对路径>
   local EXP=$1 GPUS=$2 SCRIPT=$3 DIR=runs/$1
   if [ -e "$DIR/STARTED" ]; then echo "• 跳过 $EXP：已启动过（幂等）"; return 0; fi
   if [ -n "$(nvidia-smi -i "$GPUS" --query-compute-apps=pid --format=csv,noheader 2>/dev/null)" ]; then
     echo "✗ $EXP：GPU $GPUS 上已有进程，未启动"; return 1; fi
   mkdir -p "$DIR"; date -Is > "$DIR/STARTED"; echo "$COMMIT" > "$DIR/COMMIT"
+  local TOKEN; TOKEN=$(head -c16 /dev/urandom | od -An -tx1 | tr -d ' \n')   # hex，避免 NUL 进 argv
+  printf '%s' "$TOKEN" > "$DIR/.token"                                        # 无尾换行（对 diff/hash 校验保持确定）
   log "$EXP" STARTED "$GPUS" "$COMMIT"
   if command -v tmux >/dev/null; then
-    tmux new-session -d -s "$EXP" "bash $RD/launch.sh __run $EXP $GPUS $SCRIPT"
+    tmux new-session -d -s "$EXP" "bash $RD/launch.sh __run $EXP $GPUS $SCRIPT $TOKEN"
     echo "✓ 已启动 $EXP（GPU $GPUS）。查看：tmux attach -t $EXP；日志：$DIR/train.log"
   else
-    nohup bash "$RD/launch.sh" __run "$EXP" "$GPUS" "$SCRIPT" >/dev/null 2>&1 &
+    nohup bash "$RD/launch.sh" __run "$EXP" "$GPUS" "$SCRIPT" "$TOKEN" >/dev/null 2>&1 &
     echo "✓ 已启动 $EXP（GPU $GPUS，nohup）。日志：$DIR/train.log"
   fi
 }
@@ -930,7 +1007,7 @@ disable-model-invocation: true
    - 研究员需亲自执行的 OS 保护命令（只列出，不执行）；
    - 记忆提案：champion 初值、历史负结果，写成 research/memory/proposals/CR-R00-NN.md。
 7. 向研究员展示：项目卡摘要、待定的章程项、保护命令、提案列表。研究员确认后，编辑 charter.md 和 settings.json（会触发确认），更新 STATUS.md（当前轮次：R00 完成；下一步：/ra-memory，然后 /ra-round R01）。
-8. 记录运行时版本。请研究员确认后提交：`git add -A research AGENTS.md CLAUDE.md .claude .agents .codex && git commit -m "R00 init"`。
+8. 把运行时版本写入 `research/rounds/R00/meta.yaml`（runtime、models 各角色实际 model ID、rubric_version、platform_changed；P1-2）。请研究员确认后提交：`git add -A research AGENTS.md CLAUDE.md .claude .agents .codex && git commit -m "R00 init"`。
 ~~~
 
 `.agents/skills/ra-round/SKILL.md`
@@ -958,8 +1035,9 @@ disable-model-invocation: true
 2. 自检，任一项失败就停止并报告：
    - `git status --porcelain -- AGENTS.md CLAUDE.md .claude .agents .codex research/PROTOCOL.md research/hooks research/charter.md research/rubric.md research/templates` 输出为空；
    - `printenv CUDA_VISIBLE_DEVICES` 退出码为 0，且输出为空；
+   - 账本检查：自上一轮 lock commit 以来的 `research/ledger/human_inputs.jsonl` 中，批准语句（`批准…`/`批准(RL3)…`/`批准重跑…`/`批准 CR-…`）的 `permission_mode` 均非 `auto`——auto 会话的普通输入不拦，但**批准必须来自非 auto 权限**（发现 auto 批准则停止，请研究员在 default/plan 下重新输入）；
    - 记录 `claude --version` 或 `codex --version`。与 Rp/meta.yaml 不一致时，标 platform_changed: true，建议研究员先运行 `/ra-audit R canary`，并询问是否继续。
-3. 建目录 R/{p1,p3,p4,p5,p6,p8,erc,exp,work/analyst,work/skeptic}。按 templates/meta.yaml 写 meta.yaml：charter_blob 用 `git hash-object research/charter.md`；parent_lock_commit 从 STATUS.md 取。
+3. 建目录 R/{p1,p3,p4,p5,p6,p8,erc,exp,work/analyst,work/skeptic}。按 templates/meta.yaml 写 meta.yaml：charter_blob 用 `git hash-object research/charter.md`；parent_lock_commit 从 STATUS.md 取；**填写 runtime 与 models 中各角色实际使用的 model ID**（P1-2）。
 
 ## A 结果回收（存在 Rp 时）
 1. 从 Rp/decision.md 取出已批准的 exp_id，查看 runs/<exp>/ 下的状态标记和 research/ledger/runs.jsonl。还在运行的列为"未完成"，不分析。全部未完成时，询问研究员：是先结束本次等待，还是只基于已有信息继续设计。
@@ -976,6 +1054,7 @@ R01 没有 Rp：A_results.md 只写 project_card 中基线与历史结果的指�
 全部返回后检查：3 份文件是否齐全；一句话结论是否符合 PROTOCOL §4 的正则。不合规的在 P2 标"不计入"。不合规达到 2 份及以上时，P1 判为不完整，重新调用这些角色，输出到 p1/<role>.r2.md。
 
 ## P2 广播（主会话）
+进入前检查（P1-1 阶段门）：本轮 events.jsonl 无 `kind=compact` 事件、无 `source=compact` 的 session 记录；有则 P2 记 incomplete，停止并报告。
 写 R/p2_broadcast.md：每个角色一节，逐字复制其一句话结论和证据列表，不改一个字，并标注合规或不计入。
 
 ## P3 交叉影响（并行；lite 模式下与 P4 合并为 p34/）
@@ -997,6 +1076,7 @@ R01 没有 Rp：A_results.md 只写 project_card 中基线与历史结果的指�
 6. 汇总只能用代码：写 R/p5/tally.py，读取 judge-*.md 的分数表，按 rubric 计算每维中位数、total 和极差。运行 `python3 research/rounds/R/p5/tally.py > research/rounds/R/p5/tally.md`。不采信评委的任何倾向性文字。
 
 ## P6 汇总与核验
+进入前检查（P1-1 阶段门）：同 P2 的 compact 检查；有则 P6 记 incomplete，停止并报告。
 1. 起草 R/p6_synthesis.md，包含以下内容：
    a. 上一轮的确认性结论（引用 A_results）；
    b. 关键断言 K1..，每条带 ev；
@@ -1013,9 +1093,10 @@ R01 没有 Rp：A_results.md 只写 project_card 中基线与历史结果的指�
 3. 讨论过程中，按研究员的意见修改候选、ERC、种子、预算或卡分配。每次修改在 brief 的"讨论修订记录"中追加一行。修改引入了新断言的，只对这一部分重新调用 ra-verifier，输出 p6/verify-2.md 等。资源有变化的，重做 feasibility 中的相关项。
 4. 只接受研究员亲自输入的决定，格式见 PROTOCOL §9。"好""可以""继续"或沉默都不算批准，要请研究员按格式重新输入。你不得替研究员写出或补全批准语句。
 5. 以下任一情况属于 RL3：合计 GPU·h 超出单轮预算、包含 test 评测、触及评测代码、数据或章程。此时必须是 `批准(RL3)` 并附理由；章程指定了第二确认人的，第二确认人也须亲自输入。
-6. 用 grep 在 research/ledger/human_inputs.jsonl 中找到批准原文。找不到（hook 不可用）时，在 decision.md 中注明"无 hook 记录"。
+6. 用 grep 在 research/ledger/human_inputs.jsonl 中找到批准原文，并核对该记录的 `payload.permission_mode` ≠ auto（auto 会话的输入不作批准凭据）。**找不到即终止本轮**（不得以"无 hook 记录"继续——fail-closed）：先修复 hook（对照 /ra-audit 的 K6），再从 ⏸ 继续。
 
 ## P7 决策
+进入前检查（P1-1 阶段门）：同 P2 的 compact 检查；有则 P7 记 incomplete，停止并报告。
 按模板写 R/decision.md（会触发写入确认）。如果研究员驳回，status 写 rejected，更新 STATUS.md，本轮结束。
 
 ## P8 决策影响（并行）
@@ -1104,10 +1185,11 @@ description: 对某一轮做 RA2A-Lite 协议自检；加 canary 参数时同时
 argument-hint: "[轮次号] [canary]"
 ---
 每一项都给出 PASS / FAIL / N.A.，并附命令输出作为证据。结果写入 research/audits/<R>-<日期>.md，不写进轮次目录。
-- C1 阶段完整、顺序正确：各阶段文件齐全；按 ledger/subagent_outputs.jsonl 的 ts（没有时用文件的 git 记录），满足 P1 < P3 < P4 < P5 < P6 < decision < P8 < lock。
+- C1 阶段完整、顺序正确：各阶段文件齐全；按 ledger/subagent_outputs.jsonl 的 ts（没有时用文件的 git 记录），满足 A < P1 < P2 < P3 < P4 < P5 < P6 < decision < P8 < lock；本轮时间窗内 events.jsonl 无 `kind=compact` 事件、无 `source=compact` 的 session 记录（有则该轮应已按协议记为 incomplete）。
 - C2 P1 独立：
   - 每个 p1 文件的 sha256，等于 subagent_outputs.jsonl 中对应记录的 sha256；
   - 在这些记录的 payload.agent_transcript_path 对应的 transcript 中，grep 不到读取本轮 p1/ 下他人文件的记录。
+  - C2b 每个 p1 文件对应记录的 `payload.agent_type` 必须非空、且等于文件名对应角色（analyst/designer/skeptic）；空串或不符 → FAIL（fail-closed）。
 - C3 广播保真：p2 中每一句结论，都能在对应的 p1 文件中逐字找到。
 - C4 影响矩阵完整：n(n−1) = 6 条。
 - C5 评分来源：tally.md 由 tally.py 生成，输入是 judge-*.md 中的分数；brief 中的排序与 tally 一致。
@@ -1122,11 +1204,12 @@ argument-hint: "[轮次号] [canary]"
   - 批准集合 = erc 集合 = launch.sh 集合；
   - RL3 事项附了理由。
 - C11 幂等：runs.jsonl 中每个 exp_id 至多有 1 条 STARTED。
+- C15 启动配对：runs.jsonl 中每个 DONE/FAILED/ABORTED 之前必须有同 exp_id 的 STARTED；存在无 STARTED 的终态记录（`__run` 直调的特征）→ FAIL。
 - C12 评测完整性：自上一轮以来，评测代码目录既没有提交也没有未提交的改动；`ls -ld` 显示仍为只读。
 - C13 记忆：
   - 自上一轮以来，negative_results.md 的 `git diff --numstat` 删除行数为 0；
   - memory/*.md 的每次改动都能对应到一个 applied 的 CR。
-- C14 平台：meta.yaml 记录了运行时版本；控制文件与 HEAD 一致。
+- C14 平台：meta.yaml 记录了运行时版本与各角色 model（尚无轮次时判 N.A.）；批准语句记录的 `permission_mode` 均非 `auto`；控制文件与 HEAD 一致。
 
 canary（参数中带 canary 时执行；每次升级 Claude Code 或 Codex 之后必须跑）：
 - K1 `printenv CUDA_VISIBLE_DEVICES` 输出为空。
@@ -1136,6 +1219,7 @@ canary（参数中带 canary 时执行；每次升级 Claude Code 或 Codex 之�
 - K5 自动记忆已关闭：Claude 下，~/.claude/projects/ 中本项目没有 memory/ 目录，或其中没有新文件；Codex 下，配置中 memories 已关闭。
 - K6 hooks 生效：研究员最近一次输入出现在 human_inputs.jsonl 中；最近一次子代理调用出现在 subagent_outputs.jsonl 中。
 - K7 子代理配置：.claude/agents/*.md 的 tools 中没有 Agent，也没有 memory 字段。
+- K9 子代理 agent_type：调用任一 ra-* 子代理，检查 subagent_outputs.jsonl 最新记录的 `payload.agent_type` 非空且等于角色名。**通过后研究员才可创建 `research/hooks/.whitelist_on` 激活 ra:out 白名单；不通过则不得激活**（fail-closed 白名单会拒绝一切角色输出）。
 有 FAIL 时写进 STATUS.md，并建议研究员先修复，再开下一轮。
 ~~~
 
@@ -1157,40 +1241,179 @@ canary（参数中带 canary 时执行；每次升级 Claude Code 或 Codex 之�
   "permissions": {
     "defaultMode": "default",
     "disableBypassPermissionsMode": "disable",
+    "disableAutoMode": "disable",
     "allow": [
-      "Edit(./research/rounds/**)", "Edit(./research/STATUS.md)", "Edit(./research/project_card.md)",
-      "Edit(./research/memory/proposals/**)", "Edit(./research/audits/**)",
-      "Bash(git status *)", "Bash(git log *)", "Bash(git diff *)", "Bash(git show *)", "Bash(git ls-files *)",
-      "Bash(git rev-parse *)", "Bash(git hash-object *)", "Bash(git add *)",
-      "Bash(nvidia-smi *)", "Bash(df *)", "Bash(du *)", "Bash(tail *)", "Bash(head *)", "Bash(wc *)",
-      "Bash(sha256sum *)", "Bash(tmux ls *)", "Bash(printenv CUDA_VISIBLE_DEVICES)",
-      "Bash(python3 research/rounds/*)", "Bash(python3 -m py_compile *)",
-      "Bash(claude --version)", "Bash(codex --version)"
+      "Edit(./research/rounds/**)",
+      "Edit(./research/STATUS.md)",
+      "Edit(./research/project_card.md)",
+      "Edit(./research/memory/proposals/**)",
+      "Edit(./research/audits/**)",
+      "Edit(./update/**)",
+      "Edit(./research/runtime/checks/**)",
+      "Bash(git status *)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git show *)",
+      "Bash(git ls-files *)",
+      "Bash(git rev-parse *)",
+      "Bash(git hash-object *)",
+      "Bash(git add *)",
+      "Bash(git tag)",
+      "Bash(git tag -l)",
+      "Bash(git tag -l *)",
+      "Bash(git tag --list)",
+      "Bash(git tag --list *)",
+      "Bash(git tag -n *)",
+      "Bash(git branch --show-current)",
+      "Bash(git stash list)",
+      "Bash(git remote)",
+      "Bash(git remote -v)",
+      "Bash(git describe *)",
+      "Bash(git rev-list *)",
+      "Bash(git cat-file *)",
+      "Bash(git blame *)",
+      "Bash(nvidia-smi *)",
+      "Bash(df *)",
+      "Bash(du *)",
+      "Bash(tail *)",
+      "Bash(head *)",
+      "Bash(wc *)",
+      "Bash(sha256sum *)",
+      "Bash(tmux ls *)",
+      "Bash(printenv CUDA_VISIBLE_DEVICES)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(grep *)",
+      "Bash(rg *)",
+      "Bash(stat *)",
+      "Bash(file *)",
+      "Bash(diff *)",
+      "Bash(jq *)",
+      "Bash(which *)",
+      "Bash(realpath *)",
+      "Bash(readlink *)",
+      "Bash(basename *)",
+      "Bash(dirname *)",
+      "Bash(uname *)",
+      "Bash(nproc)",
+      "Bash(python3 -m py_compile *)",
+      "Bash(claude --version)",
+      "Bash(codex --version)"
     ],
     "ask": [
-      "Edit(./research/charter.md)", "Edit(./research/rubric.md)", "Edit(./research/PROTOCOL.md)",
-      "Edit(./research/templates/**)", "Edit(./research/memory/*.md)", "Edit(./research/rounds/*/decision.md)",
-      "Edit(./AGENTS.md)", "Edit(./CLAUDE.md)", "Edit(./.claude/**)", "Edit(./.agents/**)", "Edit(./.codex/**)",
-      "Bash(git commit *)", "Bash(bash research/rounds/*)",
-      "Bash(tmux kill-session *)", "Bash(kill *)", "Bash(pkill *)", "Bash(rm *)"
+      "Edit(./research/charter.md)",
+      "Edit(./research/rubric.md)",
+      "Edit(./research/PROTOCOL.md)",
+      "Edit(./research/templates/**)",
+      "Edit(./research/memory/*.md)",
+      "Edit(./research/rounds/*/decision.md)",
+      "Edit(./AGENTS.md)",
+      "Edit(./CLAUDE.md)",
+      "Edit(./.claude/**)",
+      "Edit(./.agents/**)",
+      "Edit(./.codex/**)",
+      "Bash(git commit *)",
+      "Bash(git tag -a *)",
+      "Bash(git tag -s *)",
+      "Bash(bash research/rounds/*)",
+      "Bash(python3 research/rounds/*)",
+      "Bash(tmux kill-session *)",
+      "Bash(kill *)",
+      "Bash(pkill *)",
+      "Bash(rm *)"
     ],
     "deny": [
-      "Edit(./research/ledger/**)", "Edit(./research/hooks/**)", "Edit(./runs/**)",
-      "Edit(./eval/**)", "Edit(./data/**)", "Read(./data/test/**)",
-      "Bash(torchrun *)", "Bash(accelerate launch *)", "Bash(deepspeed *)",
-      "Bash(python -m torch.distributed.run *)", "Bash(python3 -m torch.distributed.run *)",
-      "Bash(CUDA_VISIBLE_DEVICES=*)", "Bash(export CUDA_VISIBLE_DEVICES*)",
-      "Bash(env CUDA_VISIBLE_DEVICES*)", "Bash(unset CUDA_VISIBLE_DEVICES*)",
-      "Bash(git push *)", "Bash(git reset *)", "Bash(git rebase *)", "Bash(git commit --amend*)",
-      "Bash(git clean *)", "Bash(git restore *)", "Bash(git checkout -- *)",
-      "Bash(sudo *)", "Bash(chmod *)", "Bash(chown *)", "Bash(chattr *)", "Bash(rm -rf *)"
+      "Edit(./research/ledger/**)",
+      "Edit(./research/hooks/**)",
+      "Edit(./runs/**)",
+      "Read(./runs/**/.token)",
+      "Edit(./eval/**)",
+      "Edit(./data/**)",
+      "Read(./data/test/**)",
+      "Bash(torchrun *)",
+      "Bash(accelerate launch *)",
+      "Bash(deepspeed *)",
+      "Bash(python -m torch.distributed.run *)",
+      "Bash(python3 -m torch.distributed.run *)",
+      "Bash(CUDA_VISIBLE_DEVICES=*)",
+      "Bash(export CUDA_VISIBLE_DEVICES*)",
+      "Bash(env CUDA_VISIBLE_DEVICES*)",
+      "Bash(unset CUDA_VISIBLE_DEVICES*)",
+      "Bash(git push *)",
+      "Bash(git reset *)",
+      "Bash(git rebase *)",
+      "Bash(git commit --amend*)",
+      "Bash(git clean *)",
+      "Bash(git restore *)",
+      "Bash(git checkout -- *)",
+      "Bash(sudo *)",
+      "Bash(chmod *)",
+      "Bash(chown *)",
+      "Bash(chattr *)",
+      "Bash(rm -rf *)"
     ]
   },
   "hooks": {
-    "SessionStart":     [{ "hooks": [{ "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/research/hooks/ra_log.py\" session" }] }],
-    "UserPromptSubmit": [{ "hooks": [{ "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/research/hooks/ra_log.py\" human" }] }],
-    "SubagentStop":     [{ "hooks": [{ "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/research/hooks/ra_log.py\" subagent" }] }],
-    "PreCompact":       [{ "hooks": [{ "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/research/hooks/ra_log.py\" compact" }] }]
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/research/hooks/ra_log.py\" session"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/research/hooks/ra_log.py\" human"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/research/hooks/ra_log.py\" subagent"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/research/hooks/ra_log.py\" compact"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/research/hooks/ra_log.py\" perm_request"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/research/hooks/ra_log.py\" notify"
+          }
+        ]
+      }
+    ]
   }
 }
 ~~~
@@ -1211,6 +1434,23 @@ canary（参数中带 canary 时执行；每次升级 Claude Code 或 Codex 之�
 import fcntl, hashlib, json, os, pathlib, re, subprocess, sys, time
 
 OUT_RE = re.compile(r"\A\s*<!--\s*ra:out\s+(R\d{2,}/[A-Za-z0-9_./-]+\.md)\s*-->")
+
+# v2.3 P0-1b：ra:out 目标路径白名单（fail-closed）。依据：check/demo-conformance-final-verdict.md §3 P0-1b。
+# 激活前置（K9）：真实 ra-* 子代理的 SubagentStop 输入 agent_type 非空且等于角色名——实测通过后，
+# 由研究员创建 research/hooks/.whitelist_on（空文件）方才生效；标记不存在时维持旧行为（仅记账，不拦截）。
+# ⚠️ 平台若不填 agent_type（账本实测出现过空串），激活白名单会拒绝一切角色输出、流程不可用——此时不得激活。
+# 主会话文件（decision.md、brief.md、p2_broadcast.md、p5/candidates-*、p6_synthesis 等）不在任何角色的白名单内。
+WHITELIST = {                                   # 角色 → (精确后缀集合, 前缀集合)；后缀指 Rnn/ 之后的部分
+    "ra-analyst":  (("A_results.md", "baseline_analysis.md"), ()),
+    "ra-skeptic":  (("integrity.md",), ()),
+    "ra-designer": ((), ()),
+    "ra-judge":    ((), ("p5/judge-",)),
+    "ra-verifier": ((), ("p6/verify",)),
+}
+for _role in ("ra-analyst", "ra-skeptic", "ra-designer"):
+    _name = _role.split("-", 1)[1]
+    _exacts, _prefixes = WHITELIST[_role]
+    WHITELIST[_role] = (_exacts + tuple(f"{_ph}/{_name}.md" for _ph in ("p1", "p3", "p34", "p4", "p8")), _prefixes)
 
 
 def find_root(p):
@@ -1233,7 +1473,7 @@ def append(path, rec):
         fcntl.flock(f, fcntl.LOCK_UN)
 
 
-def save_out(root, msg):
+def save_out(root, msg, agent_type="", enforce=False):
     m = OUT_RE.match(msg)
     if not m:
         return None
@@ -1244,6 +1484,15 @@ def save_out(root, msg):
     target = (rounds / rel).resolve()
     if rounds not in target.parents:
         return "rejected:path"
+    if enforce:                                  # v2.3 P0-1b：白名单判定（fail-closed）
+        at = (agent_type or "").strip()
+        parts = rel.split("/", 1)
+        suffix = parts[1] if len(parts) == 2 else ""
+        if not at:
+            return "rejected:agent_type_missing"  # 账本实测 agent_type 可能为空串：一律拒绝
+        exacts, prefixes = WHITELIST.get(at, ((), ()))
+        if suffix not in exacts and not (prefixes and suffix.startswith(tuple(prefixes))):
+            return f"rejected:whitelist({at})"
     if target.exists():
         target = target.with_name(f"{target.stem}.dup-{time.strftime('%Y%m%dT%H%M%S')}.md")
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -1280,7 +1529,9 @@ def main():
     if kind == "human":
         append(led / "human_inputs.jsonl", rec)
     elif kind == "subagent":
-        rec["written_to"] = save_out(root, msg) if msg else None
+        enforce = (root / "research" / "hooks" / ".whitelist_on").exists()   # K9 通过后由研究员创建
+        rec["whitelist_enforced"] = enforce
+        rec["written_to"] = save_out(root, msg, p.get("agent_type"), enforce) if msg else None
         append(led / "subagent_outputs.jsonl", rec)
     else:
         append(led / "events.jsonl", rec)
@@ -1484,7 +1735,7 @@ developer_instructions = """
 """
 ~~~
 
-### 5.18 对 §5.9 `launch.sh` 模板的补丁（创建文件时必须一起应用）
+### 5.18 对 §5.9 `launch.sh` 模板的补丁（创建文件时必须一起应用；本包 §5.9 的 launch.sh 代码块已是补丁后全文，此节保留作历史依据）
 
 用途：智能体会话里一旦执行 `launch.sh` 就直接拒绝，只有 `launch_mode: B` 且运行时是 Claude Code 时例外。判定依据是一个**我们自己设置的信号**：智能体环境里 `CUDA_VISIBLE_DEVICES` 已设置、但值为空（Claude 由 settings 的 env 设置，Codex 由 shell_environment_policy 设置）。研究员自己的终端通常不会这样设置。
 
@@ -1596,7 +1847,7 @@ fi
 | 调用技能 | `/ra-round R03` | `$ra-round R03`，或用 `/skills` 选择 |
 | 子代理定义 | `.claude/agents/*.md` | `.codex/agents/*.toml`（正文共用 `.claude/agents`） |
 | 并行发起 | 同一条消息里发出多个子代理调用 | 主会话请求并行 spawn（max_threads=4） |
-| 记账 hook | settings.json 中 4 个 | hooks.json 中 3 个，需要在 `/hooks` 中信任 |
+| 记账 hook | settings.json 中 6 个（v2.4 增加PermissionRequest/Notification 只记账 hook） | hooks.json 中 3 个，需要在 `/hooks` 中信任 |
 | 受保护路径 | deny/ask 规则 + OS 权限 | 只有 OS 权限 + git 审计；`.git`、`.codex` 由沙箱保护 |
 | 改受保护文件 | 弹窗确认 | **不弹窗**（在工作区内可写），靠开轮自检和 `/ra-audit` 事后发现 |
 | GPU 隔离 | settings env + deny 规则 | shell_environment_policy + rules forbidden |

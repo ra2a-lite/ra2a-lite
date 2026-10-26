@@ -2,7 +2,7 @@
 version: v2.4-plan-2
 supersedes: v2.4-plan-1
 date: 2026-10-26
-status: revised_proposal_not_applied
+status: b0_b1_applied_v2.4
 charter_trace: []
 scope_note: 治理与开发工作流改造，不提出研究实验，不修改研究目标
 reviews:
@@ -303,3 +303,4 @@ plan-2 的原版留存、当前版本/help、指针与基线检查另存于 `res
 |---|---|---|
 | v2.4-plan-1 | 两份初始 review 的 22 项对账与 B0–B4 方案 | 原版留存于 research/audits/permissions-2026-10-26/work/plan-review-r2/plan-1.original.md |
 | v2.4-plan-2 | 增加 acceptEdits 文件操作验收与回退、未隔离过渡期禁 auto、明确宿主人工签署和按通道验证、socket/版本能力测试、工程定位和收益范围 | update/plan_review.md；本文件 §2.1 的 PR01–PR08；只修订方案，未应用配置 |
+| v2.4（应用）| 2026-10-26 研究员指令"先完成 B0、B1"：B0 基线锁定与 B1 白天减负/规则语义修正实施为包版本 v2.4（含版本机制：CHANGELOG/PATCH-v2.4/tag）；B2–B4 未实施，门条件见 §9 | PATCH-v2.4.md；CHANGELOG.md；git tag v2.4 |
