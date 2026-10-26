@@ -1,0 +1,269 @@
+[
+ {
+  "path": "AGENTS.md",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "22592a009c60",
+  "file_sha12": "22592a009c60"
+ },
+ {
+  "path": "CLAUDE.md",
+  "mode": "verbatim",
+  "status": "drifted",
+  "block_sha12": "a8c38271de5b",
+  "file_sha12": "3bb684c7e528"
+ },
+ {
+  "path": "research/PROTOCOL.md",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "c4a0d6d6c2ad",
+  "file_sha12": "c4a0d6d6c2ad"
+ },
+ {
+  "path": "research/charter.md",
+  "mode": "check_only",
+  "status": "in_sync",
+  "block_sha12": "d3c95301d51a",
+  "file_sha12": "d3c95301d51a"
+ },
+ {
+  "path": "research/rubric.md",
+  "mode": "check_only",
+  "status": "in_sync",
+  "block_sha12": "440466f7f7ef",
+  "file_sha12": "440466f7f7ef"
+ },
+ {
+  "path": "research/project_card.md",
+  "mode": "check_only",
+  "status": "in_sync",
+  "block_sha12": "5ad444cb05ef",
+  "file_sha12": "5ad444cb05ef"
+ },
+ {
+  "path": "research/memory/knowledge.md",
+  "mode": "check_only",
+  "status": "in_sync",
+  "block_sha12": "78d6ac94216d",
+  "file_sha12": "78d6ac94216d"
+ },
+ {
+  "path": "research/memory/negative_results.md",
+  "mode": "check_only",
+  "status": "in_sync",
+  "block_sha12": "07a1b2fec145",
+  "file_sha12": "07a1b2fec145"
+ },
+ {
+  "path": "research/memory/hypotheses.md",
+  "mode": "check_only",
+  "status": "in_sync",
+  "block_sha12": "edb00117f3b4",
+  "file_sha12": "edb00117f3b4"
+ },
+ {
+  "path": "research/memory/playbook.md",
+  "mode": "check_only",
+  "status": "in_sync",
+  "block_sha12": "a932d6c4ce74",
+  "file_sha12": "a932d6c4ce74"
+ },
+ {
+  "path": "research/templates/meta.yaml",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "834f3f6ed003",
+  "file_sha12": "834f3f6ed003"
+ },
+ {
+  "path": "research/templates/erc.yaml",
+  "mode": "verbatim",
+  "status": "drifted",
+  "block_sha12": "5bc55f567287",
+  "file_sha12": "29eda7f15087"
+ },
+ {
+  "path": "research/templates/brief.md",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "2dd293e97681",
+  "file_sha12": "2dd293e97681"
+ },
+ {
+  "path": "research/templates/decision.md",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "dff4e6ff4ad4",
+  "file_sha12": "dff4e6ff4ad4"
+ },
+ {
+  "path": "research/templates/cr.md",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "071af60a46c4",
+  "file_sha12": "071af60a46c4"
+ },
+ {
+  "path": "research/templates/exp.sh",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "dd157b39c30d",
+  "file_sha12": "dd157b39c30d"
+ },
+ {
+  "path": "research/templates/launch.sh",
+  "mode": "verbatim",
+  "status": "drifted",
+  "block_sha12": "4ed5a72f5806",
+  "file_sha12": "7088804b4f15"
+ },
+ {
+  "path": ".claude/agents/ra-analyst.md",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "17e66505f4cd",
+  "file_sha12": "17e66505f4cd"
+ },
+ {
+  "path": ".claude/agents/ra-designer.md",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "4b26b9da208f",
+  "file_sha12": "4b26b9da208f"
+ },
+ {
+  "path": ".claude/agents/ra-skeptic.md",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "d3d397228153",
+  "file_sha12": "d3d397228153"
+ },
+ {
+  "path": ".claude/agents/ra-judge.md",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "3cc0bf1d7a38",
+  "file_sha12": "3cc0bf1d7a38"
+ },
+ {
+  "path": ".claude/agents/ra-verifier.md",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "c4d5c752143f",
+  "file_sha12": "c4d5c752143f"
+ },
+ {
+  "path": ".agents/skills/ra-init/SKILL.md",
+  "mode": "verbatim",
+  "status": "drifted",
+  "block_sha12": "f6fae7cb2ed9",
+  "file_sha12": "caab37913848"
+ },
+ {
+  "path": ".agents/skills/ra-round/SKILL.md",
+  "mode": "verbatim",
+  "status": "drifted",
+  "block_sha12": "363edd0cebe3",
+  "file_sha12": "3e4643301d10"
+ },
+ {
+  "path": ".agents/skills/ra-status/SKILL.md",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "26b44490482a",
+  "file_sha12": "26b44490482a"
+ },
+ {
+  "path": ".agents/skills/ra-launch/SKILL.md",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "6c992017a561",
+  "file_sha12": "6c992017a561"
+ },
+ {
+  "path": ".agents/skills/ra-memory/SKILL.md",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "7b8d42a02a30",
+  "file_sha12": "7b8d42a02a30"
+ },
+ {
+  "path": ".agents/skills/ra-audit/SKILL.md",
+  "mode": "verbatim",
+  "status": "drifted",
+  "block_sha12": "3e711f15e6b6",
+  "file_sha12": "45e1ef395b6a"
+ },
+ {
+  "path": ".claude/settings.json",
+  "mode": "verbatim",
+  "status": "drifted",
+  "block_sha12": "8db5187cb1ad",
+  "file_sha12": "89458a3ca625"
+ },
+ {
+  "path": "research/hooks/ra_log.py",
+  "mode": "verbatim",
+  "status": "drifted",
+  "block_sha12": "a1e3c1183116",
+  "file_sha12": "a597c6987dd6"
+ },
+ {
+  "path": ".codex/config.toml",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "ed506e947570",
+  "file_sha12": "ed506e947570"
+ },
+ {
+  "path": ".codex/hooks.json",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "5f820af52a1f",
+  "file_sha12": "5f820af52a1f"
+ },
+ {
+  "path": ".codex/rules/ra.rules",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "e780b1440a3d",
+  "file_sha12": "e780b1440a3d"
+ },
+ {
+  "path": ".codex/agents/ra-analyst.toml",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "1f8f4f6587ac",
+  "file_sha12": "1f8f4f6587ac"
+ },
+ {
+  "path": ".codex/agents/ra-designer.toml",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "4fb202ca5ed4",
+  "file_sha12": "4fb202ca5ed4"
+ },
+ {
+  "path": ".codex/agents/ra-skeptic.toml",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "af5ec8e41466",
+  "file_sha12": "af5ec8e41466"
+ },
+ {
+  "path": ".codex/agents/ra-judge.toml",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "df3de9c66d02",
+  "file_sha12": "df3de9c66d02"
+ },
+ {
+  "path": ".codex/agents/ra-verifier.toml",
+  "mode": "verbatim",
+  "status": "in_sync",
+  "block_sha12": "7b34a76a0dc6",
+  "file_sha12": "7b34a76a0dc6"
+ }
+]
+---- summary: 38 compared, 8 drifted ['CLAUDE.md', 'research/templates/erc.yaml', 'research/templates/launch.sh', '.agents/skills/ra-init/SKILL.md', '.agents/skills/ra-round/SKILL.md', '.agents/skills/ra-audit/SKILL.md', '.claude/settings.json', 'research/hooks/ra_log.py']
