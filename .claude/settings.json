@@ -17,6 +17,8 @@
       "Edit(./research/project_card.md)",
       "Edit(./research/memory/proposals/**)",
       "Edit(./research/audits/**)",
+      "WebSearch",
+      "WebFetch",
       "Bash(git status *)",
       "Bash(git log *)",
       "Bash(git diff *)",
