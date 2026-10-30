@@ -1,0 +1,1 @@
+{"schema_version":1,"kind":"genesis","writer":"commit_conclusion.py","note":"append-only;唯一写入者 /ra-memory;每行必带 approval_ref(R8)"}

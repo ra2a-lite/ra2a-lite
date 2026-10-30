@@ -3,7 +3,7 @@ exp_id: R03-E1
 round: R03
 version: 1
 title: ""
-hypothesis_ref: H-000
+hypotheses: [H-000]            # v2.5 P1-6：检验/重检的全部假设；引用写 H-000@vN
 charter_trace: [G1]
 parent: {exp: champion, config: "", commit: ""}
 change: "相对 parent 的唯一改动"
@@ -19,6 +19,10 @@ primary_metric:
   plausible_range: ["", ""]
   basis: ["ev:…"]
 guardrails: [{name: "", rule: ""}]
+identifiability:                 # v2.5 P2-10：判读边界声明
+  ceiling_risk: ""               # 参照性能是否近饱和（如 AUC>0.97）——差异可能被天花板压制
+  confounds: []                  # 主要混杂（数据难度/优化不充分/分布偏移…）
+  no_diff_reading: ""            # 落 no_diff/flat 档的解释边界（"不显现"≠"否定"）
 analysis_plan:
   compare_to: parent             # 同种子、同步数
   unit: per_example_paired_bootstrap   # 没有逐样本预测时：seed_level

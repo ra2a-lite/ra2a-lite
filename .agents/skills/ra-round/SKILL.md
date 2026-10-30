@@ -22,13 +22,15 @@ disable-model-invocation: true
    - `printenv CUDA_VISIBLE_DEVICES` 退出码为 0，且输出为空；
    - 账本检查：自上一轮 lock commit 以来的 `research/ledger/human_inputs.jsonl` 中，批准语句（`批准…`/`批准(RL3)…`/`批准重跑…`/`批准 CR-…`）的 `permission_mode` 均非 `auto`——auto 会话的普通输入不拦，但**批准必须来自非 auto 权限**（发现 auto 批准则停止，请研究员在 default/plan 下重新输入）；
    - 记录 `claude --version` 或 `codex --version`。与 Rp/meta.yaml 不一致时，标 platform_changed: true，建议研究员先运行 `/ra-audit R canary`，并询问是否继续。
-3. 建目录 R/{p1,p3,p4,p5,p6,p8,erc,exp,work/analyst,work/skeptic}。按 templates/meta.yaml 写 meta.yaml：charter_blob 用 `git hash-object research/charter.md`；parent_lock_commit 从 STATUS.md 取；**填写 runtime 与 models 中各角色实际使用的 model ID**（P1-2）。
+   - v2.5 增检：`printenv CLAUDE_CODE_FORK_SUBAGENT` 为 0、`printenv CLAUDE_CODE_DISABLE_AUTO_MEMORY` 为 1；`lsattr research/ledger/results.jsonl` 含 a → meta.yaml 记 ledger_protection: os-append-only，否则 degraded（git 对账补偿，并在 brief §0 提示研究员）。
+3. 建目录 R/{p1,p3,p4,p5,p6,p8,erc,exp,work/analyst,work/skeptic}。按 templates/meta.yaml 写 meta.yaml：charter_blob 用 `git hash-object research/charter.md`；parent_lock_commit 从 STATUS.md 取；**填写 runtime 与 models 中各角色实际使用的 model ID**（P1-2）；填写 conclusions_snapshot（conclusions/results 两本账的哈希与 results 行数）与 ledger_protection。
 
 ## A 结果回收（存在 Rp 时）
 1. 从 Rp/decision.md 取出已批准的 exp_id，查看 runs/<exp>/ 下的状态标记和 research/ledger/runs.jsonl。还在运行的列为"未完成"，不分析。全部未完成时，询问研究员：是先结束本次等待，还是只基于已有信息继续设计。
 2. 调用 ra-analyst（阶段 A）。输入：Rp 的 erc/、decision.md、相关的 runs/<exp>/。输出：`<!-- ra:out R/A_results.md -->`。
 3. 若 `git log <parent_lock_commit>..HEAD -- research/rounds/Rp/erc research/rounds/Rp/exp research/rounds/Rp/launch.sh` 非空，就在 A_results.md 顶部追加一行"⚠ 锁定后被修改"。这是唯一允许你追加的内容。
-4. 把"CR 草稿"按 templates/cr.md 写成 research/memory/proposals/CR-R-NN.md。如果本轮要依据 dev 结果做选择，把 dev 查看计数加 1。
+4. 把"CR 草稿"按 templates/cr.md 写成 research/memory/proposals/CR-R-NN.md。如果本轮要依据 dev 结果做选择，把 dev 查看计数加 1.
+5. 运行 `python3 research/scripts/res_extract.py`（白名单脚本，无参数）：把本轮判定的 RES 行追加到 results.jsonl。提取失败的实验以 undeclared 记录，不猜档位；undeclared 项在下一轮 review-queue 中提示补判。
 R01 没有 Rp：A_results.md 只写 project_card 中基线与历史结果的指针摘要。
 
 ## P1 独立评估（并行）
@@ -73,7 +75,7 @@ R01 没有 Rp：A_results.md 只写 project_card 中基线与历史结果的指�
 3. 按核验结果处理：stripped 的断言划掉，移入"剥离清单"；依赖这些断言的候选改为 hold:needs_evidence；intercepted 的移入章程拦截。同步更新 ERC 和计划。
 
 ## ⏸ 人机讨论门
-1. 按 templates/brief.md 写 R/brief.md。
+1. 按 templates/brief.md 写 R/brief.md。§0.5 上轮研究员质疑：逐字引自 human_inputs.jsonl（附 ev#L…），已处理的标 resolved_by=<ID@vN>；上轮若有 supersede，先跑 `python3 research/scripts/review_queue.py Rp`，把受影响清单要点并入 §2/§5。
 2. 在对话中展示 brief 的 §0、§1、§4、§8、§9，并给出文件路径。Claude Code 下可以用 AskUserQuestion 列出 §9 的选项，但点选不算批准。
 3. 讨论过程中，按研究员的意见修改候选、ERC、种子、预算或卡分配。每次修改在 brief 的"讨论修订记录"中追加一行。修改引入了新断言的，只对这一部分重新调用 ra-verifier，输出 p6/verify-2.md 等。资源有变化的，重做 feasibility 中的相关项。
 4. 只接受研究员亲自输入的决定，格式见 PROTOCOL §9。"好""可以""继续"或沉默都不算批准，要请研究员按格式重新输入。你不得替研究员写出或补全批准语句。
@@ -95,6 +97,7 @@ R01 没有 Rp：A_results.md 只写 project_card 中基线与历史结果的指�
 ## L 预注册锁定
 1. 执行 `git add -A research <改动的代码> runs/<Rp 的 exp>/`（.gitignore 已排除 checkpoint），再执行 `git commit -m "R lock: <exp_id 列表>"`。这一步会请研究员确认：代码与 ERC 即将冻结。
 2. 把 `git rev-parse HEAD` 写入 STATUS.md 的 lock_commit。不要写进 R/ 目录：锁定后 R/ 里不能再有任何改动。
+3. 若本轮轮末经 /ra-memory 发生过 supersede：运行 `python3 research/scripts/review_queue.py R`，受影响清单随本轮入库（喂下一轮 P1）。
 3. 锁定后，对 erc/、exp/、launch.sh 的任何修改都属于协议偏离，须新版本 ERC、重新批准、重新做锁定提交。
 
 ## X 交付启动

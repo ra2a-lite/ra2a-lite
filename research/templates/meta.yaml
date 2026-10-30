@@ -10,3 +10,10 @@ models: {lead: "", ra-analyst: "", ra-designer: "", ra-skeptic: "", ra-judge: ""
 platform_changed: false
 last_phase: "0"
 dev_looks_this_round: 0
+conclusions_snapshot:            # v2.5 R18 消费边界（开轮记录；轮中变化=closure_broken）
+  commit_id: ""
+  conclusions_hash: ""           # sha256 research/memory/conclusions.jsonl
+  projection_hash: ""            # md 投影哈希（git hash-object 汇总）
+  results_hash: ""               # sha256 research/ledger/results.jsonl
+  results_lines: 0
+ledger_protection: ""            # os-append-only | degraded（lsattr 探测；degraded=git 对账补偿）

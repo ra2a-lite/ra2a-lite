@@ -38,7 +38,10 @@
       "Bash(printenv CUDA_VISIBLE_DEVICES)",
       "Bash(python3 -m py_compile *)",
       "Bash(claude --version)",
-      "Bash(codex --version)"
+      "Bash(codex --version)",
+      "Bash(python3 research/scripts/res_extract.py)",
+      "Bash(python3 research/scripts/review_queue.py R*)",
+      "Bash(python3 research/scripts/commit_conclusion.py)"
     ],
     "ask": [
       "Edit(./research/charter.md)",
@@ -88,7 +91,13 @@
       "Bash(chmod *)",
       "Bash(chown *)",
       "Bash(chattr *)",
-      "Bash(rm -rf *)"
+      "Bash(rm -rf *)",
+      "Write(./research/ledger/**)",
+      "Write(./research/memory/conclusions.jsonl)",
+      "Edit(./research/memory/conclusions.jsonl)",
+      "Write(./research/hooks/**)",
+      "Write(./research/scripts/**)",
+      "Edit(./research/scripts/**)"
     ]
   },
   "hooks": {
@@ -128,6 +137,26 @@
           {
             "type": "command",
             "command": "python3 \"$CLAUDE_PROJECT_DIR/research/hooks/ra_log.py\" compact"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/research/hooks/guard_writes.py\" guard"
+          }
+        ]
+      },
+      {
+        "matcher": "Task|Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/research/hooks/guard_writes.py\" spawn"
           }
         ]
       }

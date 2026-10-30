@@ -145,6 +145,8 @@
 ## 4 目录结构
 
 ```
+
+   （v2.5 可选强保护）`sudo chattr +a research/ledger/*.jsonl research/memory/conclusions.jsonl` ——内核级只追加，任何人不能改删；不可用（NFS/无 sudo）时记 degraded：git 对账补偿（开轮断言旧行零变更）并在 brief §0 提示（PATCH-v2.5 §D-3）。
 <repo>/
 ├─ AGENTS.md                      # 共用规则（Codex 原生读取；Claude 经 CLAUDE.md 导入）
 ├─ CLAUDE.md                      # @AGENTS.md + Claude 专用补充
@@ -260,6 +262,7 @@ protocol_version: lite-1.0（修改属于 RL3）
 - ev:git:<commit>:<路径>[#L..]：某个历史版本
 - ev://<绝对路径>#L..：仓库外的日志
 - ev:web:<URL>#"<原文片段>"：标注[外部]，不能单独支撑确认性结论
+- 结论引用（v2.5）：引用结论写 `H-003@v2`（conclusions.jsonl 版本地址）。迁移前无版本引用记 legacy_unversioned，只告警；新轮次产物必须带版本
 - 命令输出：先保存到本轮 work/<role>/ 下的文件，再引用该文件
 "有证据"须同时满足三条：指针可解析；定位到的内容存在；内容确实包含或支持被引的数字或文本。
 断言 = 可证伪的事实陈述，包括数字、比较、因果、"文献报告……"。建议可以不带证据，但必须建立在断言之上。
@@ -271,8 +274,8 @@ protocol_version: lite-1.0（修改属于 RL3）
 ## 5 轮次阶段
 | 阶段 | 执行者 | 输入（只给这些） | 产出 | 完成判据 |
 |---|---|---|---|---|
-| 0 开轮 | 主会话 | — | meta.yaml | 自检通过 |
-| A 结果回收 | analyst | 上一轮的 erc/、decision.md、runs/<exp>/ | A_results.md | 每个已完成实验都有判定 |
+| 0 开轮 | 主会话 | — | meta.yaml | 自检通过（v2.5 增：FORK_SUBAGENT=0 与 DISABLE_AUTO_MEMORY=1 生效值实测；lsattr 探测账本保护等级记入 meta.yaml） |
+| A 结果回收 | analyst | 上一轮的 erc/、decision.md、runs/<exp>/ | A_results.md＋results.jsonl 的 RES 行 | 每个已完成实验都有判定；随后跑 research/scripts/res_extract.py（提取失败=undeclared，禁止猜档） |
 | P1 独立评估 | analyst、designer、skeptic 并行 | charter、project_card、memory、A_results、往轮 decision 列表 | p1/<role>.md | 3 份齐全，一句话结论合规 |
 | P2 广播 | 主会话 | p1/* | p2_broadcast.md | 逐字摘录 |
 | P3 交叉影响 | 三个角色并行 | p2 + 本人的 p1 | p3/<role>.md | 共 6 条（含 no_impact） |
@@ -297,6 +300,13 @@ printf '{"ts":"%s","exp_id":"%s","event":"ABORTED","abort_id":"%s","by":"researc
 2. 主会话在 rounds/<R>/retries.md 中追加一行：| <新id，如 R03-E1.r2> | <源id> | 原因 | 批准原文 | 时间 |。
 3. 提交后，由研究员运行：bash research/rounds/<R>/launch.sh retry <新id> <源id>。
 注意：修复项如果改变了实验的科学内容，就不算重跑，而是新实验，要走下一轮。
+
+### 5.3 结论版本层与记忆变更时机（v2.5）
+- `research/ledger/results.jsonl`：RES 实验判定行。由 res_extract.py 追加，**免 CR**（派生事实，对应全量 L1/L2）；只提取 A_results 明示落档，失败记 undeclared。
+- `research/memory/conclusions.jsonl`：语义结论版本行。唯一写入路径是 /ra-memory → `commit_conclusion.py`（锁内分配版本、算 content_hash），**每行必带 approval_ref（R8，对应全量 L3）**。
+- 判读升格约束（P1-4）：定论性状态（refuted/supported/confirmed/rejected/disproved）必须抄自所引实验的判读档（CR 带 band_source）；不可判定族（no_diff/no_difference/*_flat/*negligible/marginal）禁写定论性状态——H-003 教训（R02 曾把 no_diff 档写成 refuted）。
+- supersede 提交后：`python3 research/scripts/review_queue.py R??` 生成受影响清单（missing 阻断/stale 入队/legacy 告警 三档），只喂下一轮 P1 与讨论门；不改写历史、不自动触发实验。
+- 记忆变更时机：默认轮末或独立 /ra-memory 会话；**P1–P8 期间不刷新 conclusions 与 md 投影**——轮中发生即 closure_broken，已启动的治理输入闭包作废。单提交原子化：批准 → 追加 → 刷投影 → 校验哈希 → git commit。
 
 ## 6 阶段产出格式
 子代理最终消息的第一行是 <!-- ra:out Rnn/<相对路径>.md -->，其后是 front matter（round/phase/role），再后是正文。
@@ -378,13 +388,18 @@ printf '{"ts":"%s","exp_id":"%s","event":"ABORTED","abort_id":"%s","by":"researc
 - 驳回 R03: 理由
 - 批准 CR-R03-01
 - 批准重跑 R03-E1: 原因
+- 批准提交 <对象> / 批准锁定 R03（提交与锁定确认的规范说法）
+- 批准(RL3) 偏离 R03: 理由（缺阶段仍出决策属协议偏离；decision 前置门的放行条件，须研究员手动落盘）
+
+批准语句所在 prompt 的 permission_mode 必须非 auto（auto 会话的输入不作批准凭据；开轮自检与 launch.sh 双重核验）。
 
 ## 10 受保护资产
 | 资产 | Claude Code | Codex | 兜底 |
 |---|---|---|---|
 | 评测代码、dev 集 | deny Edit | — | OS 只读（安装第 5 步） |
 | test 集 | deny Read | — | 不放在智能体可读的位置 |
-| ledger/、hooks/、runs/ | deny Edit | — | git 审计（只增） |
+| ledger/、hooks/、runs/、research/scripts/ | deny Edit/Write + guard hook 拦 Bash 重定向 | rules + hook | git 审计（只增）；chattr +a，不可用则 degraded＋git 对账补偿 |
+| memory/conclusions.jsonl、ledger/results.jsonl | deny Edit/Write；仅白名单脚本追加（res_extract / commit_conclusion） | rules + hook | 同上；RES 免 CR（派生事实），conclusions 行必带 approval_ref |
 | 章程、规则、记忆、代理、技能配置 | ask | AGENTS.md 中的规则 + on-request | git 审计 |
 | GPU | CUDA_VISIBLE_DEVICES="" + 拒绝启动命令 | shell_environment_policy + rules forbidden | 模式 A 下只有研究员启动 |
 | git 历史 | deny push/reset/rebase/amend | rules forbidden | — |
@@ -395,9 +410,10 @@ printf '{"ts":"%s","exp_id":"%s","event":"ABORTED","abort_id":"%s","by":"researc
 - hypotheses.md：假设及其状态
 - playbook.md：操作经验
 proposals/ 是收件箱，只有经 /ra-memory 批准的 CR 才能修改上面四个文件。
+- conclusions.jsonl / results.jsonl（v2.5，见 §5.3）：结论版本层。假设状态词表 = open / pending / supported / confirmed / refuted / tested_flat / unresolved_*；refuted 重开（→ 非 refuted）须 proposed_by 含研究员并附批准。负结果候选先入 proposals/ 作 NR-draft，改判必须显式处置（登记或撤销并注明）。编号唯一性由 commit_conclusion.py 断言（同 id 复用不同 claim 即拒绝）。
 
 ## 12 命名
-轮次 R01、R02…；实验 R03-E1；重跑 R03-E1.r2；假设 H-001；负结果 NR-001；已确认知识 K-001；变更提案 CR-R03-01。
+轮次 R01、R02…；实验 R03-E1；重跑 R03-E1.r2；假设 H-001；负结果 NR-001；已确认知识 K-001；变更提案 CR-R03-01；结论版本地址 H-003@v2；RES 行以 exp_id 为键（kind: res）。
 ~~~
 
 ### 5.4 `research/charter.md`
@@ -568,6 +584,13 @@ models: {lead: "", ra-analyst: "", ra-designer: "", ra-skeptic: "", ra-judge: ""
 platform_changed: false
 last_phase: "0"
 dev_looks_this_round: 0
+conclusions_snapshot:            # v2.5 R18 消费边界（开轮记录；轮中变化=closure_broken）
+  commit_id: ""
+  conclusions_hash: ""           # sha256 research/memory/conclusions.jsonl
+  projection_hash: ""            # md 投影哈希（git hash-object 汇总）
+  results_hash: ""               # sha256 research/ledger/results.jsonl
+  results_lines: 0
+ledger_protection: ""            # os-append-only | degraded（lsattr 探测；degraded=git 对账补偿）
 ~~~
 
 `research/templates/erc.yaml`
@@ -618,6 +641,7 @@ rubric_version: ""
 ~~~markdown
 # R?? 人机讨论简报（≤80 行）
 ## 0 一句话：上一轮说明了什么 / 本轮建议做什么 / 共计多少 GPU·h（占预算几成）
+## 0.5 上轮研究员质疑（v2.5：逐字引自 human_inputs.jsonl 附 ev#L…；已处理标 resolved_by=<ID@vN>）
 ## 1 上一轮的确认性结果
 | exp | Δ（校正后 CI） | 判定 | GPU·h 实耗/预计 | 偏离 |
 ## 2 本轮的关键发现（已核验，带 ev）
@@ -645,12 +669,13 @@ decided_at: ""
 risk_level: RL2
 charter_blob: ""
 rubric_version: ""
+hypotheses: []   # v2.5 P1-6：本决策涉及的结论版本地址，如 [H-003@v2]
 ---
 # R?? 决策
 ## 研究员批准原文（逐字）
 > ……（时间，research/ledger/human_inputs.jsonl 中的对应记录）
 ## 批准执行的实验
-| exp_id | 标题 | GPU | 预计 GPU·h | ERC |
+| exp_id | 标题 | GPU | 预计 GPU·h | ERC | hypotheses @vN |
 ## 未执行项及理由（剪枝 / 驳回 / 待补证据 / 超预算顺延）
 ## 剥离的断言
 ## 章程拦截
@@ -666,6 +691,9 @@ id: CR-R??-01
 target: research/memory/negative_results.md
 kind: add_negative        # add_negative | add_knowledge | update_champion | hypothesis_status | playbook | agent_prompt | skill | rubric
 risk: RL2
+supersedes: []                   # v2.5：被取代的结论版本地址，如 [H-003@v2]；状态变更类必填
+relations: []                    # 非取代关系：re-tests | supports | contradicts
+band_source: ""                  # 定论性状态必填："R0?-E?=<band>"（抄自判读档，P1-4）
 status: pending           # pending | applied | rejected
 proposed_by: ""
 ---
@@ -673,6 +701,8 @@ proposed_by: ""
 ## 理由与证据（ev）
 ## 影响
 ## 批准记录（由 /ra-memory 填写）
+approval_ref: ""                 # ev:research/ledger/human_inputs.jsonl#L…（R8）
+conclusion_addr: ""              # 应用后经 commit_conclusion.py 追加的版本地址，如 H-003@v3
 ~~~
 
 `research/templates/exp.sh`（每个实验一份，由 ra-round 按 project_card 的命令模板填写）
@@ -1759,6 +1789,8 @@ EOF
 ---
 
 ## 11 版本与待核实项
+
+> **v2.5（2026-10-30，结论版本层与框架修复）**：新增 conclusions/results 两本账与四个白名单/守卫脚本（§5.10）、guard_writes 前置门与 spawn 记账、模板字段（supersedes/relations/band_source/hypotheses/identifiability/质疑节/快照）、PROTOCOL §5.3/§9/§10/§11/§12、ra-memory/ra-round 技能更新、Codex 镜像。依据：km2a-ra-hzj 轨迹审计（ratk v0.3，37 findings）→ `../trajectory_analysis/ra2a-lite-fix-proposals.md`（P0×3/P1×6/P2×3）与 `l3-lite-implementation-plan.md`（采纳裁定版）；全部修改与逐条依据见同目录 `PATCH-v2.5.md`。本环境 chattr 不可用 → ledger_protection: degraded（git 对账补偿）。
 
 本包所依据的平台行为，取自 2026-09/10 的公开文档和原型文档的核实记录。下面几项可能随版本变化，**以 canary 实测为准**：
 

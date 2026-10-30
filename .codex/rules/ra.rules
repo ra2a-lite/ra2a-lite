@@ -38,3 +38,16 @@ prefix_rule(pattern = [["sudo", "chmod", "chown", "chattr"]], decision = "forbid
             justification = "OS 权限由研究员管理")
 prefix_rule(pattern = ["rm", ["-rf", "-fr", "-r"]], decision = "forbidden",
             justification = "删除由研究员执行")
+
+# v2.5：结论版本层保护（PATCH-v2.5 §D-2）。Codex 无按路径 Edit deny，靠 hook+OS 层；
+# 账本/结论账本的写入只经白名单脚本，其余路径一律禁止。
+prefix_rule(pattern = ["chattr"], decision = "forbidden",
+            justification = "append-only 属性只能由研究员在终端设置/解除")
+prefix_rule(pattern = [["sed", "-i"]], decision = "forbidden",
+            justification = "原地改写禁止；账本只增（guard hook + git 对账兜底）")
+prefix_rule(pattern = [["python3", "python"], "research/scripts/res_extract.py"], decision = "allow",
+            justification = "白名单写入器：RES 行追加（免 CR 派生事实）")
+prefix_rule(pattern = [["python3", "python"], "research/scripts/review_queue.py", "R*"], decision = "allow",
+            justification = "白名单派生脚本：受影响清单（只读产物写入当轮 work/）")
+prefix_rule(pattern = [["python3", "python"], "research/scripts/commit_conclusion.py"], decision = "allow",
+            justification = "白名单写入器：conclusions 行追加（须 approval_ref，R8）")
